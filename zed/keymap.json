@@ -1,0 +1,55 @@
+[
+  {
+    "context": "Workspace",
+    "use_key_equivalents": true,
+    "bindings": {
+      // ⌘⇧G で tasks.json の "Open Lazygit" を実行
+      "cmd-shift-g": ["task::Spawn", { "task_name": "Open Lazygit" }]
+    }
+  },
+  // 0️⃣ 誤爆防止で単独 Ctrl-W を無効化
+  { "context": "Editor", "bindings": { "ctrl-w": null } },
+
+  // ペイン間フォーカス移動（Ctrl-W hjkl）
+  {
+    "context": "Workspace",
+    "use_key_equivalents": true,
+    "bindings": {
+      "ctrl-w left": "workspace::ActivatePaneLeft",
+      "ctrl-w right": "workspace::ActivatePaneRight",
+      "ctrl-w up": "workspace::ActivatePaneUp",
+      "ctrl-w down": "workspace::ActivatePaneDown"
+    }
+  },
+  // タブを別ペインへ移動（Ctrl-W Shift+hjkl）
+  {
+    "context": "Workspace",
+    "use_key_equivalents": true,
+    "bindings": {
+      "ctrl-w shift-h": [
+        "workspace::MoveItemToPaneInDirection",
+        { "direction": "left", "focus": true }
+      ],
+      "ctrl-w shift-l": [
+        "workspace::MoveItemToPaneInDirection",
+        { "direction": "right", "focus": true }
+      ],
+      "ctrl-w shift-k": [
+        "workspace::MoveItemToPaneInDirection",
+        { "direction": "up", "focus": true }
+      ],
+      "ctrl-w shift-j": [
+        "workspace::MoveItemToPaneInDirection",
+        { "direction": "down", "focus": true }
+      ]
+    }
+  },
+  {
+    "context": "Pane", // “タブが並ぶペイン” 内で有効
+    "use_key_equivalents": true,
+    "bindings": {
+      "ctrl-tab": "pane::ActivateNextItem", // 右隣へ
+      "ctrl-shift-tab": "pane::ActivatePreviousItem" // 左隣へ
+    }
+  }
+]

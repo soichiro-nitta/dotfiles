@@ -43,6 +43,10 @@ dotfiles/
 ├── wezterm/              # WezTerm terminal configuration
 ├── ghostty/              # Ghostty terminal configuration
 ├── tig/                  # Tig (git TUI) configuration
+├── zed/                  # Zed editor configuration
+│   ├── settings.json     # Editor settings
+│   ├── keymap.json       # Custom keybindings
+│   └── tasks.json        # Task definitions
 ├── scripts/
 │   └── various utility scripts
 ├── install.sh            # Automated installation script

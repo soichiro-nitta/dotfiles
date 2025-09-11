@@ -39,6 +39,12 @@ nvim/plugin/
 # Karabiner automatic backups
 karabiner/automatic_backups/
 
+# Zed
+zed/conversations/
+zed/prompts/
+zed/themes/
+zed/*_backup.json
+
 # Backup files
 *.backup
 *~

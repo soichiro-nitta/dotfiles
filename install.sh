@@ -216,6 +216,23 @@ if command -v tig &> /dev/null; then
     fi
 fi
 
+# Zed
+if command -v zed &> /dev/null || [[ -d "$HOME/.config/zed" ]]; then
+    mkdir -p "$HOME/.config/zed"
+    if [[ -f "zed/settings.json" ]]; then
+        cp zed/settings.json "$HOME/.config/zed/"
+        print_success "Installed Zed settings"
+    fi
+    if [[ -f "zed/keymap.json" ]]; then
+        cp zed/keymap.json "$HOME/.config/zed/"
+        print_success "Installed Zed keymap"
+    fi
+    if [[ -f "zed/tasks.json" ]]; then
+        cp zed/tasks.json "$HOME/.config/zed/"
+        print_success "Installed Zed tasks"
+    fi
+fi
+
 # 11. Setup npm global directory
 print_status "Configuring npm..."
 npm config set prefix "$HOME/.npm-global"

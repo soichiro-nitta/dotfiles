@@ -1,0 +1,65 @@
+[user]
+	name = Soichiro Nitta
+	email = soic1226@gmail.com
+[core]
+	excludesfile = /Users/soichiro/.gitignore_global
+[difftool "sourcetree"]
+	cmd = opendiff \"$LOCAL\" \"$REMOTE\"
+	path = 
+[mergetool "sourcetree"]
+	cmd = /Applications/Sourcetree.app/Contents/Resources/opendiff-w.sh \"$LOCAL\" \"$REMOTE\" -ancestor \"$BASE\" -merge \"$MERGED\"
+	trustExitCode = true
+[filter "lfs"]
+	smudge = git-lfs smudge -- %f
+	process = git-lfs filter-process
+	required = true
+	clean = git-lfs clean -- %f
+[alias]
+	graph = log --graph --pretty=format:\"%C(bold yellow)%h%C(reset) %C(bold green)%d%C(reset) %C(white)%s%C(reset) %C(dim white)- %an%C(reset) %C(bold blue)%ad%C(reset)\" --date=format:\"%Y-%m-%d %H:%M\" --all
+	lg = log --graph --pretty=format:\"%C(auto)%h%C(reset) -%C(auto)%d%C(reset) %s %C(dim white)(%cr)%C(reset) %C(blue)<%an>%C(reset)\" --abbrev-commit --all
+	ll = log --graph --pretty=format:\"%C(yellow)%h%C(reset) %C(cyan)%ad%C(reset) | %C(white)%s%C(reset) %C(green)%d%C(reset) %C(dim white)[%an]%C(reset)\" --date=short --all
+
+# 基本的な短縮
+[alias]
+	st = status
+	co = checkout
+	br = branch
+	ci = commit
+	df = diff
+	pl = pull
+	ps = push
+	
+	# ステージング関連
+	a = add
+	aa = add --all
+	ap = add -p
+	
+	# コミット関連
+	cm = commit -m
+	ca = commit --amend
+	can = commit --amend --no-edit
+	
+	# ログ表示
+	l = log --oneline -10
+	last = log -1 HEAD
+	
+	# リセット関連
+	unstage = reset HEAD --
+	undo = reset --soft HEAD^
+	
+	# ブランチ操作
+	bd = branch -d
+	bD = branch -D
+	
+	# その他便利コマンド
+	s = status
+	alias = config --get-regexp alias
+	who = shortlog -sne
+	contributors = shortlog -sne
+	psf = push --force-with-lease
+[credential "https://github.com"]
+	helper = 
+	helper = !/opt/homebrew/bin/gh auth git-credential
+[credential "https://gist.github.com"]
+	helper = 
+	helper = !/opt/homebrew/bin/gh auth git-credential

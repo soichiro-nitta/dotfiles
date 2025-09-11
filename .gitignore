@@ -1,0 +1,47 @@
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+Icon
+._*
+.DocumentRevisions-V100
+.fseventsd
+.Spotlight-V100
+.TemporaryItems
+.Trashes
+.VolumeIcon.icns
+.com.apple.timemachine.donotpresent
+.AppleDB
+.AppleDesktop
+Network Trash Folder
+Temporary Items
+.apdisk
+
+# Cursor
+cursor/Cursor/Cache/
+cursor/Cursor/CachedData/
+cursor/Cursor/logs/
+cursor/Cursor/Crashpad/
+cursor/Cursor/GPUCache/
+cursor/Cursor/Partitions/
+cursor/Cursor/Service Worker/
+cursor/Cursor/Session Storage/
+cursor/Cursor/Local Storage/
+cursor/Cursor/User/workspaceStorage/
+cursor/Cursor/User/globalStorage/
+*.sock
+
+# Backup files
+*.backup
+*~
+*.swp
+*.swo
+
+# Temporary files
+tmp/
+temp/
+
+# Private files
+.env
+.env.local
+secrets/

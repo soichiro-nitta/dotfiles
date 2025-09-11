@@ -165,12 +165,63 @@ else
     print_warning "Cursor not installed, skipping Cursor settings"
 fi
 
-# 10. Setup npm global directory
+# 10. Install other application settings
+print_status "Installing other application settings..."
+
+# Karabiner
+if [[ -d "$HOME/.config/karabiner" ]]; then
+    if [[ -f "karabiner/karabiner.json" ]]; then
+        cp karabiner/karabiner.json "$HOME/.config/karabiner/"
+        print_success "Installed Karabiner configuration"
+    fi
+    if [[ -d "karabiner/assets" ]]; then
+        cp -r karabiner/assets "$HOME/.config/karabiner/"
+        print_success "Installed Karabiner assets"
+    fi
+fi
+
+# Neovim
+if command -v nvim &> /dev/null; then
+    mkdir -p "$HOME/.config/nvim"
+    if [[ -d "nvim" ]]; then
+        cp -r nvim/* "$HOME/.config/nvim/"
+        print_success "Installed Neovim configuration"
+    fi
+fi
+
+# WezTerm
+if command -v wezterm &> /dev/null || [[ -d "$HOME/.config/wezterm" ]]; then
+    mkdir -p "$HOME/.config/wezterm"
+    if [[ -d "wezterm" ]]; then
+        cp wezterm/*.lua "$HOME/.config/wezterm/"
+        print_success "Installed WezTerm configuration"
+    fi
+fi
+
+# Ghostty
+if [[ -d "$HOME/.config/ghostty" ]] || command -v ghostty &> /dev/null; then
+    mkdir -p "$HOME/.config/ghostty"
+    if [[ -f "ghostty/config" ]]; then
+        cp ghostty/config "$HOME/.config/ghostty/"
+        print_success "Installed Ghostty configuration"
+    fi
+fi
+
+# tig
+if command -v tig &> /dev/null; then
+    mkdir -p "$HOME/.config/tig"
+    if [[ -f "tig/config" ]]; then
+        cp tig/config "$HOME/.config/tig/"
+        print_success "Installed tig configuration"
+    fi
+fi
+
+# 11. Setup npm global directory
 print_status "Configuring npm..."
 npm config set prefix "$HOME/.npm-global"
 export PATH="$HOME/.npm-global/bin:$PATH"
 
-# 11. Create .fzf.zsh if it doesn't exist
+# 12. Create .fzf.zsh if it doesn't exist
 if [[ ! -f "$HOME/.fzf.zsh" ]]; then
     cat > "$HOME/.fzf.zsh" << 'EOF'
 # Setup fzf
@@ -190,7 +241,7 @@ EOF
     print_success "Created .fzf.zsh"
 fi
 
-# 12. Final setup
+# 13. Final setup
 print_status "Running final setup..."
 
 # Source the new configuration

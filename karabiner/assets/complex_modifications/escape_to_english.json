@@ -1,0 +1,24 @@
+{
+  "title": "Escape to English Input Method",
+  "rules": [
+    {
+      "description": "Press Escape to switch to English input method (Alphanumeric/Eisuu)",
+      "manipulators": [
+        {
+          "type": "basic",
+          "from": {
+            "key_code": "escape"
+          },
+          "to": [
+            {
+              "key_code": "escape"
+            },
+            {
+              "key_code": "japanese_eisuu"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

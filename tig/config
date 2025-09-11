@@ -1,0 +1,77 @@
+# Modern color scheme for tig
+set main-view-date = custom
+set main-view-date-format = "%Y-%m-%d %H:%M"
+set main-view-author = full
+set main-view-commit-title = true
+
+# Color scheme - Modern dark theme
+color default           252     235
+color cursor            15      240
+color status            118     235
+color delimiter         241     235
+color date              140     235
+color mode              108     235
+color id                166     235
+color overflow          88      235
+color header            108     235
+color section           108     235
+color directory         215     235
+color file              252     235
+color grep.file         34      235
+color file-size         default 235
+color line-number       221     235
+color title-blur        252     235
+color title-focus       227     235
+
+# Diff colors - More vibrant
+color diff-header       227     235
+color diff-index        166     235
+color diff-chunk        140     235
+color diff-add          118     235
+color diff-del          203     235
+color diff-oldmode      221     235
+color diff-newmode      221     235
+color diff-copy-from    223     235
+color diff-copy-to      223     235
+color diff-rename-from  221     235
+color diff-rename-to    221     235
+color diff-similarity   221     235
+color diff-dissimilarity 221    235
+color diff-tree         81      235
+color diff-stat         81      235
+
+# Graph colors - Modern palette
+color graph-commit      166     235
+color graph-merge       108     235
+
+# Status view colors
+color stat-head         81      235
+color stat-section      108     235
+color stat-staged       118     235
+color stat-unstaged     203     235
+color stat-untracked    140     235
+
+# Tree view colors
+color tree.head         default 235
+color tree.dir          108     235
+color tree.file         default 235
+
+# Search highlighting
+color search-result     16      221
+
+# Better branch/tag colors
+color palette-0         160     235
+color palette-1         40      235
+color palette-2         196     235
+color palette-3         126     235
+color palette-4         23      235
+color palette-5         202     235
+color palette-6         90      235
+
+# Key bindings for better navigation
+bind main    R      !git rebase -i %(commit)
+bind diff    R      !git rebase -i %(commit)
+bind main    !      !git revert %(commit)
+bind main    @      !git checkout %(commit)
+bind refs    @      !git checkout %(branch)
+bind main    <Ctrl-r> !git reset --hard %(commit)

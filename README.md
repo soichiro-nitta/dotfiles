@@ -36,10 +36,17 @@ dotfiles/
 │       ├── settings.json   # Cursor settings
 │       ├── keybindings.json # Cursor keybindings
 │       └── snippets/       # Code snippets
+├── karabiner/
+│   ├── karabiner.json     # Karabiner-Elements configuration
+│   └── assets/            # Complex modifications
+├── nvim/                  # Neovim configuration
+├── wezterm/              # WezTerm terminal configuration
+├── ghostty/              # Ghostty terminal configuration
+├── tig/                  # Tig (git TUI) configuration
 ├── scripts/
 │   └── various utility scripts
-├── install.sh             # Automated installation script
-└── README.md              # This file
+├── install.sh            # Automated installation script
+└── README.md             # This file
 ```
 
 ## 🔧 Installation

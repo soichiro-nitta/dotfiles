@@ -31,6 +31,14 @@ cursor/Cursor/User/workspaceStorage/
 cursor/Cursor/User/globalStorage/
 *.sock
 
+# Neovim
+nvim/lazy-lock.json
+nvim/.luarc.json
+nvim/plugin/
+
+# Karabiner automatic backups
+karabiner/automatic_backups/
+
 # Backup files
 *.backup
 *~

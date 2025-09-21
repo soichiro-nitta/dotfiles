@@ -656,20 +656,24 @@ alias ts="tig status"
 # cdコマンドをラップして引数なしの場合はfzfを使用
 cd() {
   if [[ $# -eq 0 ]]; then
-    # 引数なしの場合は現在のディレクトリ以下をfzfで選択
+    # 引数なし: fzf でディレクトリ選択。先頭に「..（親へ）」を追加
     local selected_dir
     selected_dir=$(
-      find . -type d -not -path '*/\.*' 2>/dev/null | \
+      { echo ".."; find . -type d -not -path '*/\.*' 2>/dev/null; } | \
       fzf --preview 'echo "📁 $(basename {})" && echo "━━━━━━━━━━━━━━━━━━━━" && ls -1 {} 2>/dev/null | head -30 || echo "アクセスできません"' \
           --preview-window right:50%:wrap \
-          --header 'Select directory to change to' \
+          --header 'Select directory (.. = parent)' \
           --bind 'ctrl-/:toggle-preview' \
           --height 70% \
           --ansi
     )
-    
+
     if [[ -n "$selected_dir" ]]; then
-      builtin cd "$selected_dir"
+      if [[ "$selected_dir" == ".." ]]; then
+        builtin cd ..
+      else
+        builtin cd "$selected_dir"
+      fi
     fi
   else
     # 引数がある場合は通常のcdコマンドを実行

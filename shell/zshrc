@@ -739,23 +739,15 @@ setopt PROMPT_CR
 setopt PROMPT_SP
 
 
-# >>> Cursor Agent c alias >>>
-# Managed by assistant: run Cursor Agent with c (auto-approve enabled)
+# >>> Codex c alias >>>
+# Managed by assistant: run Codex with c alias
 unalias c 2>/dev/null
 unset -f c 2>/dev/null
-c() {
-  cursor-agent --force "$@"
-  local exit_code=$?
-  if [ $exit_code -eq 0 ]; then
-    osascript -e 'display notification "Cursor Agent完了" with title "WezTerm" sound name "Glass"'
-  else
-    osascript -e 'display notification "Cursor Agentエラー終了" with title "WezTerm" sound name "Basso"'
-  fi
-  return $exit_code
-}
-# <<< Cursor Agent c alias <<<
+alias c='codex --yolo -s workspace-write'
+# <<< Codex c alias <<<
 
 # Added by Codex CLI: ensure ~/.local/bin is in PATH
 export PATH="/Users/soichiro/.local/bin:/usr/local/bin:/System/Cryptexes/App/usr/bin:/usr/bin:/bin:/usr/sbin:/sbin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/local/bin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/bin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/appleinternal/bin:/Library/Apple/usr/bin:/Users/soichiro/.npm-global/bin:/opt/homebrew/bin:/opt/homebrew/sbin:/opt/homebrew/opt/fzf/bin"
 export PATH="$HOME/.local/bin:$PATH"
 alias gpsf="git push --force-with-lease"
+alias dotupdate="~/Work/dotfiles/update-dotfiles.sh"

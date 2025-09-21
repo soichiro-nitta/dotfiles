@@ -1,19 +1,12 @@
-# Codex CLI 設定ファイル（テンプレート）
-# このファイルは install.sh により ~/.codex/config.toml として配備されます。
+# === Global defaults (CLI/TUI/IDEで共通に読まれる) ===
+model = "gpt-5" # Codex向け最適モデル
+model_reasoning_effort = "medium" # 推論を深める
+model_reasoning_summary = "detailed" # 要約をリッチに
+model_verbosity = "low" # 出力は情報多め
 
-language = "ja"                # 既定応答言語（日本語）
-approval_policy = "never"      # 自動承認（ローカル環境での自動作業を優先）
-sandbox_mode = "danger-full-access"  # ローカルフルアクセス（自己責任で使用）
-network_access = "enabled"     # ネットワーク許可
+# 作業用サンドボックス（読み書き＆ネットワーク許可）
+[sandbox_workspace_write]
+network_access = true
 
-[ui]
-confirm_before_destructive = true
-progress_updates = true
-
-[paths]
-workspace = "~/Work"           # 既定の作業ディレクトリ（必要に応じて変更）
-local_bin = "~/.local/bin"
-
-[editor]
-default = "nvim"               # 参考：外部エディタフック（CLI 実装に依存）
-
+[tools]
+web_search = true # Web検索ツールを常時有効

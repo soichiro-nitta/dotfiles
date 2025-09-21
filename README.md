@@ -96,6 +96,57 @@ alias dotupdate="~/Work/dotfiles/update-dotfiles.sh"
 codex-run
 ```
 
+## 運用ガイド（今回の改善点を反映）
+
+- 役割の統一: 「マシンが正」。dotfiles は収集物（バックアップ）として管理します。
+- 日常運用: 変更後は `dotupdate` ひとつで同期→コミット→プッシュまで完了。
+- 局所運用: `dotsync` だけでリポジトリへ取り込み、内容確認後に `dotpush`。
+- 同期対象（抜粋）: `~/.zshrc`、`~/.tmux.conf`、`~/.gitconfig`、`~/.gitignore_global`、Cursor/Zed/WezTerm/Ghostty/Karabiner/tig のユーザー設定、`~/.codex`（機密除外）。
+- 除外（重要）: Codex の認証/履歴/ログ/セッションは `.gitignore` 済み。Cursor などのキャッシュ類も除外。
+
+### `c` エイリアス方針
+
+- `c` は Codex CLI を起動します（Cursor Agent ではありません）。
+- 定義: `alias c='codex --yolo -s workspace-write'`
+- 確認: `type -a c` / `alias c` で Codex を指していることを確認。
+- 変更したい場合は `shell/zshrc` を編集し、`dotupdate` で反映。
+
+### 新規マシンの初期化手順（ブートストラップ）
+
+1) dotfiles を取得してインストール
+
+```
+git clone https://github.com/soichiro-nitta/dotfiles.git ~/dotfiles
+cd ~/dotfiles
+./install.sh && source ~/.zshrc
+```
+
+2) Codex を使う場合（未導入時）
+
+```
+./scripts/setup-codex.sh
+```
+
+3) エイリアス確認
+
+```
+type -a c
+```
+
+### 機密を誤ってコミットした場合の対処
+
+- 速やかに該当ファイルを削除・`.gitignore` へ追記し、履歴を書き換えます。
+- 例）BFG Repo-Cleaner を使う（参考）:
+
+```
+# 例: 大域で機密パターンを除去
+java -jar bfg.jar --delete-files auth.json --delete-files history.jsonl .
+git reflog expire --expire=now --all && git gc --prune=now --aggressive
+git push --force
+```
+
+（必要ならトークンのローテートも実施してください。）
+
 ## 📥 install.sh が配置するファイル
 
 常時

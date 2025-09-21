@@ -1,141 +1,152 @@
-local wezterm = require 'wezterm'
-local config = {}
+local wezterm = require("wezterm")
+local config = wezterm.config_builder()
 
--- In newer versions of wezterm, use the config_builder which will
--- help provide clearer error messages
-if wezterm.config_builder then
-  config = wezterm.config_builder()
-end
-
--- Kanso color scheme
-config.colors = {
-  -- The default text color
-  foreground = '#c5c8c6',
-  -- The default background color
-  background = '#1d1f21',
-
-  -- Overrides the cell background color when the current cell is occupied by the
-  -- cursor and the cursor style is set to Block
-  cursor_bg = '#c5c8c6',
-  -- Overrides the text color when the current cell is occupied by the cursor
-  cursor_fg = '#1d1f21',
-  -- Specifies the border color of the cursor when the cursor style is set to Block,
-  -- or the color of the vertical or horizontal bar when the cursor style is set to
-  -- Bar or Underline.
-  cursor_border = '#c5c8c6',
-
-  -- the foreground color of selected text
-  selection_fg = '#1d1f21',
-  -- the background color of selected text
-  selection_bg = '#c5c8c6',
-
-  -- The color of the scrollbar "thumb"; the portion that represents the current viewport
-  scrollbar_thumb = '#282a2e',
-
-  -- The color of the split lines between panes
-  split = '#707880',
-
-  ansi = {
-    '#282a2e', -- black
-    '#a54242', -- red
-    '#8c9440', -- green
-    '#de935f', -- yellow
-    '#5f819d', -- blue
-    '#85678f', -- magenta
-    '#5e8d87', -- cyan
-    '#707880', -- white
-  },
-  brights = {
-    '#373b41', -- bright black
-    '#cc6666', -- bright red
-    '#b5bd68', -- bright green
-    '#f0c674', -- bright yellow
-    '#81a2be', -- bright blue
-    '#b294bb', -- bright magenta
-    '#8abeb7', -- bright cyan
-    '#c5c8c6', -- bright white
-  },
-
-  -- Indexed colors. The first 16 are the same as the ansi and brights
-  indexed = {
-    [136] = '#af8700',
-  },
-
-  -- Visual Bell
-  visual_bell = '#202020',
-
-  -- Colors for copy_mode and quick_select
-  -- available since: 20220807-113146-c2fee766
-  -- In copy_mode, the color of the active text is:
-  -- 1. copy_mode_active_highlight_* if additional text was selected using the mouse
-  -- 2. selection_* otherwise
-  copy_mode_active_highlight_bg = { Color = '#52ad70' },
-  -- use `AnsiColor` to specify one of the ansi color palette values
-  -- (index 0-15) using one of the names "Black", "Maroon", "Green",
-  --  "Olive", "Navy", "Purple", "Teal", "Silver", "Grey", "Red", "Lime",
-  -- "Yellow", "Blue", "Fuchsia", "Aqua" or "White".
-  copy_mode_active_highlight_fg = { AnsiColor = 'Black' },
-  copy_mode_inactive_highlight_bg = { Color = '#52ad70' },
-  copy_mode_inactive_highlight_fg = { AnsiColor = 'White' },
-
-  quick_select_label_bg = { Color = 'peru' },
-  quick_select_label_fg = { Color = '#ffffff' },
-  quick_select_match_bg = { AnsiColor = 'Navy' },
-  quick_select_match_fg = { Color = '#ffffff' },
+-- Font Configuration
+config.font = wezterm.font_with_fallback {
+	{ family = "Hack Nerd Font", weight = "Regular" },
+	{ family = "Osaka−等幅", scale = 1.0 },
+	"Apple Color Emoji",
 }
+config.font_size = 13.0
+config.line_height = 1.2
 
--- Font configuration
-config.font = wezterm.font('JetBrains Mono')
-config.font_size = 12.0
+-- Color Scheme and Appearance
+-- Kanso theme configuration
+local kanso_zen = require("colors.kanso-zen")
+config.colors = kanso_zen.colors
+config.force_reverse_video_cursor = kanso_zen.force_reverse_video_cursor
+config.window_background_opacity = 0.95
+config.text_background_opacity = 1.0
+config.window_decorations = "RESIZE"
+config.window_close_confirmation = "AlwaysPrompt"
 
--- Window configuration
-config.window_background_opacity = 0.88
-config.window_decorations = "TITLE | RESIZE"
-config.window_padding = {
-  left = 10,
-  right = 10,
-  top = 10,
-  bottom = 10,
-}
-
--- Window frame configuration
--- Note: Commented out to use macOS native window decorations
--- config.window_frame = {
---   -- Border configuration
---   border_left_width = '1px',
---   border_right_width = '1px',
---   border_bottom_height = '1px',
---   border_top_height = '1px',
---   border_left_color = '#707880',
---   border_right_color = '#707880',
---   border_bottom_color = '#707880',
---   border_top_color = '#707880',
--- }
-
--- Tab bar
+-- Tab Bar Configuration
 config.hide_tab_bar_if_only_one_tab = true
 config.tab_bar_at_bottom = false
-config.use_fancy_tab_bar = false
+config.use_fancy_tab_bar = true
+config.tab_max_width = 25
 
--- Tab bar colors
-config.colors.tab_bar = {
-  -- The color of the inactive tab bar edge/divider
-  inactive_tab_edge = '#707880',
+-- Window Configuration
+config.window_padding = {
+	left = 16,
+	right = 16,
+	top = 16,
+	bottom = 16,
+}
+config.adjust_window_size_when_changing_font_size = false
+config.initial_cols = 120
+config.initial_rows = 32
+
+-- Performance and Behavior
+config.enable_scroll_bar = false
+config.scrollback_lines = 10000
+config.check_for_updates = false
+config.automatically_reload_config = true
+
+-- Terminal Settings
+config.default_cwd = "/Users/soichiro/Work"
+config.set_environment_variables = {
+	LANG = "ja_JP.UTF-8",
+	LC_ALL = "ja_JP.UTF-8",
+	TERM = "wezterm",
 }
 
--- Cursor
-config.default_cursor_style = 'BlinkingBar'
+-- Enable Kitty keyboard protocol for better modifier key support
+config.enable_kitty_keyboard = true
 
--- Other settings
-config.scrollback_lines = 10000
-config.enable_scroll_bar = false
+-- Bell Configuration
+config.audible_bell = "Disabled"
+config.visual_bell = {
+	fade_in_duration_ms = 75,
+	fade_out_duration_ms = 75,
+	target = "CursorColor",
+}
 
--- Key bindings
+-- Key Bindings
 config.keys = {
-  -- Make Option-Left equivalent to Alt-b which many line editors interpret as backward-word
-  { key = 'LeftArrow', mods = 'OPT', action = wezterm.action.SendString '\x1bb' },
-  -- Make Option-Right equivalent to Alt-f; forward-word
-  { key = 'RightArrow', mods = 'OPT', action = wezterm.action.SendString '\x1bf' },
+	-- Fix Shift+Enter for Claude Code multiline input
+	{ key = "Enter", mods = "SHIFT", action = wezterm.action.SendString("\n") },
+	
+	-- Pane Management
+	{ key = "d", mods = "CMD", action = wezterm.action.SplitHorizontal({ domain = "CurrentPaneDomain" }) },
+	{ key = "D", mods = "CMD|SHIFT", action = wezterm.action.SplitVertical({ domain = "CurrentPaneDomain" }) },
+	{ key = "w", mods = "CMD", action = wezterm.action.CloseCurrentPane({ confirm = true }) },
+	{ key = "z", mods = "CMD", action = wezterm.action.TogglePaneZoomState },
+
+	-- Pane Navigation (Vim style)
+	{ key = "h", mods = "CMD|SHIFT", action = wezterm.action.ActivatePaneDirection("Left") },
+	{ key = "j", mods = "CMD|SHIFT", action = wezterm.action.ActivatePaneDirection("Down") },
+	{ key = "k", mods = "CMD|SHIFT", action = wezterm.action.ActivatePaneDirection("Up") },
+	{ key = "l", mods = "CMD|SHIFT", action = wezterm.action.ActivatePaneDirection("Right") },
+
+	-- Pane Resizing
+	{ key = "LeftArrow", mods = "CMD|SHIFT", action = wezterm.action.AdjustPaneSize({ "Left", 5 }) },
+	{ key = "RightArrow", mods = "CMD|SHIFT", action = wezterm.action.AdjustPaneSize({ "Right", 5 }) },
+	{ key = "UpArrow", mods = "CMD|SHIFT", action = wezterm.action.AdjustPaneSize({ "Up", 5 }) },
+	{ key = "DownArrow", mods = "CMD|SHIFT", action = wezterm.action.AdjustPaneSize({ "Down", 5 }) },
+
+	-- Tab Management
+	{ key = "t", mods = "CMD", action = wezterm.action.SpawnTab("CurrentPaneDomain") },
+	{ key = "w", mods = "CMD|SHIFT", action = wezterm.action.CloseCurrentTab({ confirm = true }) },
+	{ key = "[", mods = "CMD", action = wezterm.action.ActivateTabRelative(-1) },
+	{ key = "]", mods = "CMD", action = wezterm.action.ActivateTabRelative(1) },
+	{ key = "{", mods = "CMD|SHIFT", action = wezterm.action.MoveTabRelative(-1) },
+	{ key = "}", mods = "CMD|SHIFT", action = wezterm.action.MoveTabRelative(1) },
+
+	-- Font Size Adjustment
+	{ key = "=", mods = "CMD", action = wezterm.action.IncreaseFontSize },
+	{ key = "-", mods = "CMD", action = wezterm.action.DecreaseFontSize },
+	{ key = "0", mods = "CMD", action = wezterm.action.ResetFontSize },
+
+	-- Search
+	{ key = "f", mods = "CMD", action = wezterm.action.Search({ CaseSensitiveString = "" }) },
+
+	-- Copy/Paste
+	{ key = "c", mods = "CMD", action = wezterm.action.CopyTo("Clipboard") },
+	{ key = "v", mods = "CMD", action = wezterm.action.PasteFrom("Clipboard") },
+
+	-- Scrollback (changed to avoid conflict with pane navigation)
+	{ key = "r", mods = "CMD|SHIFT", action = wezterm.action.ClearScrollback("ScrollbackAndViewport") },
+
+	-- Quick Select Mode
+	{ key = " ", mods = "CMD|SHIFT", action = wezterm.action.QuickSelect },
+
+	-- Show Tab Navigator
+	{ key = "9", mods = "CMD", action = wezterm.action.ShowTabNavigator },
+
+	-- Show Launcher
+	{ key = "p", mods = "CMD|SHIFT", action = wezterm.action.ShowLauncher },
+	
+	-- Send Cmd-p as Ctrl-p to Neovim
+	{ key = "p", mods = "CMD", action = wezterm.action.SendString("\x10") },
+}
+
+-- Mouse Bindings
+config.mouse_bindings = {
+	{
+		event = { Up = { streak = 1, button = "Left" } },
+		mods = "CMD",
+		action = wezterm.action.OpenLinkAtMouseCursor,
+	},
+}
+
+-- Hyperlink Rules
+config.hyperlink_rules = wezterm.default_hyperlink_rules()
+
+-- Additional hyperlink rules for common patterns
+table.insert(config.hyperlink_rules, {
+	regex = [[\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}\b]],
+	format = "mailto:$0",
+})
+
+-- SSH Domain Configuration (example)
+config.ssh_domains = {
+	{
+		name = "server",
+		remote_address = "server.example.com",
+		username = "soichiro",
+	},
 }
 
 return config
+

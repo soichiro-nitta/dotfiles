@@ -41,6 +41,26 @@ if [ -d "$HOME/.config/zed" ]; then
   echo "  sync: Zed settings"
 fi
 
+# VSCode (settings.json only) — sanitize to remove formatter/linter keys
+code_user="$HOME/Library/Application Support/Code/User"
+if [ -d "$code_user" ]; then
+  mkdir -p "$repo_dir/vscode/User"
+  src_set="$code_user/settings.json"
+  dst_set="$repo_dir/vscode/User/settings.json"
+  if [ -f "$src_set" ]; then
+    if command -v jq >/dev/null 2>&1; then
+      jq '
+        del(."editor.defaultFormatter", ."editor.codeActionsOnSave", ."eslint.nodePath", ."eslint.workingDirectories", ."eslint.useFlatConfig", ."eslint.validate", ."prettier.enable")
+        | del(."[javascript]", ."[typescript]", ."[typescriptreact]", ."[json]", ."[html]")
+      ' "$src_set" > "$dst_set"
+      echo "  sync: VSCode settings (sanitized)"
+    else
+      cp -a "$src_set" "$dst_set"
+      echo "  sync: VSCode settings (raw; jq not found)"
+    fi
+  fi
+fi
+
 # WezTerm (~/.config/wezterm と ~/.wezterm.lua の両対応)
 mkdir -p "$repo_dir/wezterm"
 if [ -d "$HOME/.config/wezterm" ]; then

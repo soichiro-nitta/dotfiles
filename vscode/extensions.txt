@@ -1,0 +1,10 @@
+# VSCode 推奨拡張（1 行 1 拡張 ID）
+# 空行と # から始まる行は無視されます
+
+esbenp.prettier-vscode           # Prettier フォーマッタ（ai-zaiko 用）
+dbaeumer.vscode-eslint           # ESLint（ai-zaiko の自動修正用）
+biomejs.biome                    # Biome（aburi-all 用）
+bradlc.vscode-tailwindcss        # Tailwind CSS IntelliSense
+eamodio.gitlens                  # GitLens
+mikestead.dotenv                 # .env ハイライト
+EditorConfig.EditorConfig        # EditorConfig サポート

@@ -17,6 +17,7 @@ dotfiles/
 ├── shell/               # Zsh/Tmux
 ├── git/                 # Git 設定
 ├── cursor/              # Cursor 設定
+├── vscode/              # VSCode 設定（UI のみ）
 ├── karabiner/           # Karabiner-Elements
 ├── nvim/                # Neovim
 ├── wezterm/             # WezTerm
@@ -68,6 +69,23 @@ mkdir -p ~/Library/Application\ Support/Cursor/User
 cp cursor/User/*.json ~/Library/Application\ Support/Cursor/User/
 ```
 
+4) VSCode（UI 設定のみを配備）
+
+```bash
+mkdir -p ~/Library/Application\ Support/Code/User
+cp vscode/User/settings.json "~/Library/Application Support/Code/User/settings.json"
+```
+
+### 推奨拡張（extensions.txt）
+
+- 一覧: `vscode/extensions.txt`
+- `./install.sh` 実行時に `code` コマンドがあれば自動で導入されます。
+- 手動で入れる場合:
+
+```bash
+while read -r ext; do [[ -z "$ext" || "$ext" =~ ^# ]] || code --install-extension "$ext"; done < vscode/extensions.txt
+```
+
 ## 同期ポリシー（マシンが正）
 
 - このリポジトリは「マシン上の設定を集約したバックアップ」が正です。
@@ -101,7 +119,7 @@ codex-run
 - 役割の統一: 「マシンが正」。dotfiles は収集物（バックアップ）として管理します。
 - 日常運用: 変更後は `dotupdate` ひとつで同期→コミット→プッシュまで完了。
 - 局所運用: `dotsync` だけでリポジトリへ取り込み、内容確認後に `dotpush`。
-- 同期対象（抜粋）: `~/.zshrc`、`~/.tmux.conf`、`~/.gitconfig`、`~/.gitignore_global`、Cursor/Zed/WezTerm/Ghostty/Karabiner/tig のユーザー設定、`~/.codex`（機密除外）。
+- 同期対象（抜粋）: `~/.zshrc`、`~/.tmux.conf`、`~/.gitconfig`、`~/.gitignore_global`、Cursor/Zed/VSCode/WezTerm/Ghostty/Karabiner/tig のユーザー設定、`~/.codex`（機密除外）。
 - 除外（重要）: Codex の認証/履歴/ログ/セッションは `.gitignore` 済み。Cursor などのキャッシュ類も除外。
 
 ### `c` エイリアス方針
@@ -164,6 +182,7 @@ git push --force
 
 条件付き
 - Cursor: `~/Library/Application Support/Cursor/User/` に settings/keybindings/snippets
+- VSCode: `~/Library/Application Support/Code/User/` に `settings.json`（グローバルは UI のみ。フォーマッタ/リンタは各プロジェクトで管理）
 - Karabiner: `~/.config/karabiner/` に設定/assets（ディレクトリがある場合）
 - Neovim: `~/.config/nvim/` に一式（`nvim` がある場合）
 - WezTerm: `~/.config/wezterm/` に `.lua`（WezTerm あり or ディレクトリあり）

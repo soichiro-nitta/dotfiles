@@ -165,7 +165,41 @@ else
     print_warning "Cursor not installed, skipping Cursor settings"
 fi
 
-# 10. Install other application settings
+# 10. Install VSCode settings (UI only; formatter/linter is project-local)
+if command -v code &> /dev/null || [[ -d "$HOME/Library/Application Support/Code" ]]; then
+    print_status "Installing VSCode settings..."
+    vscode_dir="$HOME/Library/Application Support/Code/User"
+    mkdir -p "$vscode_dir"
+    if [[ -f "vscode/User/settings.json" ]]; then
+        cp vscode/User/settings.json "$vscode_dir/settings.json"
+        print_success "Installed VSCode settings.json"
+    fi
+
+    # Install recommended VSCode extensions if 'code' CLI is available
+    if command -v code &> /dev/null; then
+        if [[ -f "vscode/extensions.txt" ]]; then
+            print_status "Installing VSCode extensions (from vscode/extensions.txt)..."
+            while IFS= read -r ext || [[ -n "$ext" ]]; do
+                [[ -z "$ext" || "$ext" =~ ^# ]] && continue
+                if code --list-extensions | grep -qx "$ext"; then
+                    print_success "Extension already installed: $ext"
+                else
+                    if code --install-extension "$ext" >/dev/null 2>&1; then
+                        print_success "Installed extension: $ext"
+                    else
+                        print_warning "Failed to install: $ext"
+                    fi
+                fi
+            done < "vscode/extensions.txt"
+        fi
+    else
+        print_warning "'code' CLI not found. Skip extensions install (enable from VSCode: Shell Command: Install 'code' command)."
+    fi
+else
+    print_warning "VSCode not installed, skipping VSCode settings"
+fi
+
+# 11. Install other application settings
 print_status "Installing other application settings..."
 
 # Karabiner
@@ -233,7 +267,7 @@ if command -v zed &> /dev/null || [[ -d "$HOME/.config/zed" ]]; then
     fi
 fi
 
-# 11. Codex CLI templates (~/.codex)
+# 12. Codex CLI templates (~/.codex)
 print_status "Installing Codex templates..."
 mkdir -p "$HOME/.codex"
 if [[ -f "AGENTS.md" ]]; then
@@ -243,12 +277,12 @@ if [[ -d "codex" ]]; then
     cp -R codex/* "$HOME/.codex/" 2>/dev/null || true
 fi
 
-# 12. Setup npm global directory
+# 13. Setup npm global directory
 print_status "Configuring npm..."
 npm config set prefix "$HOME/.npm-global"
 export PATH="$HOME/.npm-global/bin:$PATH"
 
-# 13. Create .fzf.zsh if it doesn't exist
+# 14. Create .fzf.zsh if it doesn't exist
 if [[ ! -f "$HOME/.fzf.zsh" ]]; then
     cat > "$HOME/.fzf.zsh" << 'EOF'
 # Setup fzf
@@ -268,7 +302,7 @@ EOF
     print_success "Created .fzf.zsh"
 fi
 
-# 14. Install codex-run wrapper
+# 15. Install codex-run wrapper
 mkdir -p "$HOME/.local/bin"
 if [[ -f "scripts/codex-run" ]]; then
     cp scripts/codex-run "$HOME/.local/bin/codex-run"
@@ -276,7 +310,7 @@ if [[ -f "scripts/codex-run" ]]; then
     print_success "Installed codex-run"
 fi
 
-# 15. Final setup
+# 16. Final setup
 print_status "Running final setup..."
 
 # Source the new configuration

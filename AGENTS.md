@@ -1,0 +1,108 @@
+# Global AGENT Guidance
+
+このリポジトリで作業するエージェント向けのグローバル方針です。プロジェクト配下すべてに適用します。
+
+## Language Policy
+
+- 常に日本語で応答してください。
+
+## 1. コーディング規約（React/TypeScript）
+
+### コンポーネント
+- arrow function を使用（function 宣言は原則不使用）
+- props は展開しない（不要な `...props` の横流し禁止）
+- 型定義は `type` を使用（`interface` は不使用。外部ライブラリとの統合時のみ例外）
+- `any` は使用禁止（必要なら明示的な型設計）
+- React Hooks は名前付きインポート（`React.useState` は不使用）
+- props の型はインラインで記述（再利用時のみ `type` 定義）
+- `forwardRef` は使用しない（外部ライブラリとの統合時のみ例外）
+- props は `props.xxx` として明示的に参照（分割代入は必要時のみ最小限）
+
+### コード構造
+- return は最小限（単一 return 推奨）
+- 早期リターン禁止・ガードブロック推奨（`if (!cond) return` は使用しない）
+- 条件分岐は `&&` を優先（三項は原則不使用。必要時のみ）
+- 変数/関数は再利用しないものはインラインで記述
+- 一度きりのスタイルオブジェクトはインライン指定
+- 一度きりの小関数/定数もインラインで記述
+- コンポーネント分割は過剰に行わない（責務が明確な場合のみ）
+- ファイル内ローカルのマッピング/補助ロジックは `__` プレフィックスで関数化しファイル最下部に配置
+
+### 一時変数
+- 単回利用の一時変数は作らずインライン化
+- 再利用や可読性向上の根拠がない一時変数の導入を禁止
+- 例外: 値が変わる可能性があるもの（`ref.current`、非同期間の状態など）は安全のため一時変数で保持
+
+### コード品質
+- 型定義はインライン化（再利用時のみ `type` 定義）
+- 重複パターンはオブジェクトリテラルで統合
+- コンポーネントは単一の return 文に収束
+- 条件分岐はオブジェクトインデックスで置換できないか検討
+
+## 2. 命名規則
+
+### 基本原則（役割優先・ドメイン後置）
+- 役割を先頭に置く（例: state, set, ref, id, key, on/handle, get/add/update/remove）
+- ドメイン名はその後ろに続ける（例: `stateUser`, `refSvg`, `idUser`, `onUserClick`）
+
+### 具体例
+- useState: `stateXXX`, `setXXX`
+- useRef: `refXXX`
+- 反復処理コールバック引数は 1–2 文字（`p`, `i`）
+- ドメイン関数は動詞ベース（`get`, `getById`, `add`, `update`, `remove`）
+- ページ/レイアウトの変数名: ページは `Page`、レイアウトは `Layout`（default export）
+
+## 3. ファイル/フォルダ構成（Next.js App Router）
+- `page.tsx` は RSC（"use client" 禁止）
+- クライアント側ロジックは `_Client/` へ分離
+- 単回利用の子は `_` プレフィックス（例: `_DialogEdit.tsx`）
+- `app/layout.tsx` は `<main>` ランドマークで `children` をラップ（ページ側では `<main>` 不使用）
+- トップページ関連は `app/(home)` に集約
+- `@` はプロジェクトルートのエイリアス
+
+## 4. DOM 操作・Motion 統合
+- DOM 操作で try/catch を使わない（存在ガードと型絞り込み）
+- 一時的参照は `ref`、横断参照は `id`（`ID.XXX.E()`）
+- `@soichiro_nitta/motion` を使用
+- 変化は `transform`/`opacity` に限定（`scale`, `translateY`, `rotate`, `opacity`）
+- `motion.delay(sec)` は常に `await` を付けて使用（`setTimeout`/`setInterval` 不使用）
+- `motion.set`/`motion.to` へ `transform` 複合値を渡さない（個別キー指定）
+- 単位付き文字列を使用（例: `'61px'`, `'120deg'`, `'1'`）
+
+## 5. スタイル管理
+- 共通スタイルはファイル内ローカルの `__style` に集約
+- クラス合成は `class-variance-authority` の `cva`/`cx`
+- ページ内共通化は `__style` or `__Component` で対応
+
+## 6. Next.js 固有
+- `next/image` を使用しない（標準 `<img>`、`alt` 必須）
+
+## 7. パッケージ管理
+- 常に pnpm を使用（`pnpm add`, `pnpm add -D`, `pnpm install`）
+
+## 8. ESLint/Prettier
+- ESLint: Flat Config（`eslint.config.mjs`）
+- `@next/next/no-img-element` はオフ
+- `import/order` でアルファベット昇順・グループ改行
+- Hooks: `rules-of-hooks` off / `exhaustive-deps` warn
+- TS: `no-explicit-any: warn`, `consistent-type-imports: error`, `no-unused-vars: warn`
+- 特殊制約：
+  - `**/app/**/page.{js,jsx,ts,tsx}` で "use client" 禁止
+  - Client → Server/Page の直 import を禁止
+  - TS ファイルから `page.tsx` への直 import を禁止
+- Prettier: `prettier-plugin-tailwindcss`、セミコロンなし、シングルクォート、トレイリングカンマあり
+
+## 9. コミットメッセージ
+- 日本語、Conventional Commits 推奨（例：`feat: ホームページのヒーローセクションを追加`）
+
+## 10. Convex 命名
+- CRUD: `get`, `getById`, `add`, `update`, `remove`
+- 関数名にドメイン名を含めない
+
+## 禁止事項
+- `page.tsx` に "use client" を付与しない
+- 不要な `...props` の横流し禁止
+- トップページ専用の要素を `app/` 直下や共通ディレクトリに置かない
+- 早期リターン（`if (!cond) return`）を使用しない
+- `setTimeout`/`setInterval` 不使用（待機は `motion.delay` に統一）
+

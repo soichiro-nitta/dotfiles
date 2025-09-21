@@ -1,0 +1,18 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+# Codex CLI を日本語・安全既定で起動する簡易ラッパ
+
+if ! command -v codex >/dev/null 2>&1; then
+  echo "codex コマンドが見つかりません。まず ./scripts/setup-codex.sh を実行してください。" >&2
+  exit 127
+fi
+
+# 既定方針（必要に応じて CLI オプションに合わせて変更）
+export CODEX_LANGUAGE="ja"
+export CODEX_APPROVAL_POLICY="never"
+export CODEX_SANDBOX_MODE="danger-full-access"
+export CODEX_NETWORK_ACCESS="enabled"
+
+exec codex "$@"
+

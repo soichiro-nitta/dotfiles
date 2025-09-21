@@ -233,12 +233,22 @@ if command -v zed &> /dev/null || [[ -d "$HOME/.config/zed" ]]; then
     fi
 fi
 
-# 11. Setup npm global directory
+# 11. Codex CLI templates (~/.codex)
+print_status "Installing Codex templates..."
+mkdir -p "$HOME/.codex"
+if [[ -f "AGENTS.md" ]]; then
+    cp AGENTS.md "$HOME/.codex/AGENTS.md"
+fi
+if [[ -d "codex" ]]; then
+    cp -R codex/* "$HOME/.codex/" 2>/dev/null || true
+fi
+
+# 12. Setup npm global directory
 print_status "Configuring npm..."
 npm config set prefix "$HOME/.npm-global"
 export PATH="$HOME/.npm-global/bin:$PATH"
 
-# 12. Create .fzf.zsh if it doesn't exist
+# 13. Create .fzf.zsh if it doesn't exist
 if [[ ! -f "$HOME/.fzf.zsh" ]]; then
     cat > "$HOME/.fzf.zsh" << 'EOF'
 # Setup fzf
@@ -258,7 +268,15 @@ EOF
     print_success "Created .fzf.zsh"
 fi
 
-# 13. Final setup
+# 14. Install codex-run wrapper
+mkdir -p "$HOME/.local/bin"
+if [[ -f "scripts/codex-run" ]]; then
+    cp scripts/codex-run "$HOME/.local/bin/codex-run"
+    chmod +x "$HOME/.local/bin/codex-run"
+    print_success "Installed codex-run"
+fi
+
+# 15. Final setup
 print_status "Running final setup..."
 
 # Source the new configuration

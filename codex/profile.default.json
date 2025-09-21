@@ -1,0 +1,7 @@
+{
+  "language": "ja",
+  "approval_policy": "never",
+  "sandbox_mode": "danger-full-access",
+  "network_access": "enabled",
+  "notes": "Codex CLI の参考プロファイル。必要に応じて CLI オプションに置き換えて使用してください。"
+}

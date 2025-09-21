@@ -20,6 +20,7 @@ My personal development environment configuration for macOS.
 - **Cursor IDE settings**: Keybindings, settings, and snippets
 - **Terminal multiplexer**: tmux configuration
 - **Modern CLI tools**: ripgrep, bat, fzf, and more
+- **Codex CLI templates**: AGENTS.md とラッパー（日本語・安全既定）
 
 ## 📦 What's Included
 
@@ -49,6 +50,14 @@ dotfiles/
 │   └── tasks.json        # Task definitions
 ├── scripts/
 │   └── various utility scripts
+├── codex/                # Codex CLI 用テンプレ（~/.codex に配備）
+│   ├── README.md
+│   └── profile.default.json
+├── scripts/
+│   ├── setup-codex.sh    # Codex CLI セットアップ（必要時）
+│   └── codex-run         # Codex 起動ラッパ（~/.local/bin に配備）
+├── sync-dotfiles.sh      # Home → Repo へ同期
+├── push-dotfiles.sh      # コミット & プッシュ補助
 ├── install.sh            # Automated installation script
 └── README.md             # This file
 ```
@@ -97,6 +106,19 @@ If you prefer to install manually or selectively:
    cp cursor/User/*.json ~/Library/Application\ Support/Cursor/User/
    ```
 
+### (任意) Codex CLI のセットアップ
+
+```bash
+# テンプレ（~/.codex）と codex-run を配備
+./install.sh
+
+# Codex CLI 本体が未導入なら（可能なら）自動導入を試す
+./scripts/setup-codex.sh
+
+# ラッパーで起動（日本語・安全既定）
+codex-run
+```
+
 ## 📝 Key Bindings & Aliases
 
 ### Git Operations
@@ -143,6 +165,10 @@ To update your dotfiles:
 cd ~/dotfiles
 git pull
 ./install.sh
+
+# ホーム側で変更した設定を取り込んでから push
+~/Work/dotfiles/sync-dotfiles.sh
+~/Work/dotfiles/push-dotfiles.sh "chore(dotfiles): 設定を同期"
 ```
 
 ## 🛠 Customization

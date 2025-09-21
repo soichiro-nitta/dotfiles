@@ -52,7 +52,8 @@ dotfiles/
 │   └── various utility scripts
 ├── codex/                # Codex CLI 用テンプレ（~/.codex に配備）
 │   ├── README.md
-│   └── profile.default.json
+│   ├── profile.default.json
+│   └── config.toml       # Codex 本体設定（テンプレ）
 ├── scripts/
 │   ├── setup-codex.sh    # Codex CLI セットアップ（必要時）
 │   └── codex-run         # Codex 起動ラッパ（~/.local/bin に配備）

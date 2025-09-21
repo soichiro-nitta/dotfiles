@@ -41,11 +41,15 @@ if [ -d "$HOME/.config/zed" ]; then
   echo "  sync: Zed settings"
 fi
 
-# WezTerm
+# WezTerm (~/.config/wezterm と ~/.wezterm.lua の両対応)
+mkdir -p "$repo_dir/wezterm"
 if [ -d "$HOME/.config/wezterm" ]; then
-  mkdir -p "$repo_dir/wezterm"
   rsync -a --delete "$HOME/.config/wezterm/" "$repo_dir/wezterm/"
-  echo "  sync: WezTerm"
+  echo "  sync: WezTerm config dir"
+fi
+if [ -f "$HOME/.wezterm.lua" ]; then
+  cp -a "$HOME/.wezterm.lua" "$repo_dir/wezterm/wezterm.lua"
+  echo "  sync: ~/.wezterm.lua"
 fi
 
 # Ghostty
@@ -69,12 +73,18 @@ if [ -d "$HOME/.config/tig" ]; then
   echo "  sync: tig"
 fi
 
-# Codex: ~/.codex をテンプレへ反映（存在すればドキュメント用途で同期）
+# Codex: ~/.codex（機密除外）
 if [ -d "$HOME/.codex" ]; then
   mkdir -p "$repo_dir/codex"
-  rsync -a "$HOME/.codex/" "$repo_dir/codex/"
-  echo "  sync: ~/.codex"
+  rsync -a \
+    --exclude 'auth.json' \
+    --exclude 'history.jsonl' \
+    --exclude 'internal_storage.json' \
+    --exclude 'log/' \
+    --exclude 'sessions/' \
+    --exclude 'version.json' \
+    "$HOME/.codex/" "$repo_dir/codex/"
+  echo "  sync: ~/.codex (safe)"
 fi
 
 echo "[dotfiles] 同期完了"
-

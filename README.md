@@ -1,219 +1,141 @@
-# Soichiro's Dotfiles
+# Soichiro の Dotfiles（macOS）
 
-My personal development environment configuration for macOS.
+macOS 用の開発環境設定一式です。シェル、Git、各種エディタ/ターミナル、Codex のテンプレまでまとめて導入できます。
 
-## 🚀 Features
+## 🚀 特徴
 
-### Git Enhancements
-- **Interactive Git commands** (`g` + space): Browse and select Git commands with fzf
-- **Safe force push** (`gpsf`): Force push with lease protection
-- **Interactive operations**: Branch selection, file staging, stash management, and more
-- **Beautiful Git aliases**: Enhanced log visualization and shortcuts
+- Git 操作を fzf で対話的に（`g`+スペース、`gco`/`ga`/`gsh` など）
+- ディレクトリ/ファイル移動の高速化（`z`、`cd`/`v` の fzf 連携）
+- `p`/`ps` で npm/pnpm スクリプトを対話実行
+- Cursor/Zed/WezTerm/Ghostty/tig/Neovim の設定同梱
+- Codex CLI 用テンプレ（AGENTS.md、config.toml、起動ラッパ）
 
-### Shell Productivity
-- **Directory jumping** (`z`): Quick navigation to frequently used directories
-- **Fuzzy file/directory selection**: Enhanced `cd`, `v` (vim), and file operations
-- **Package.json script runner** (`p`): Interactive npm/pnpm script execution
-- **Smart completions**: Context-aware completions for various commands
-
-### Development Tools
-- **Cursor IDE settings**: Keybindings, settings, and snippets
-- **Terminal multiplexer**: tmux configuration
-- **Modern CLI tools**: ripgrep, bat, fzf, and more
-- **Codex CLI templates**: AGENTS.md とラッパー（日本語・安全既定）
-
-## 📦 What's Included
+## 📦 構成
 
 ```
 dotfiles/
-├── shell/
-│   ├── zshrc              # Zsh configuration
-│   └── tmux.conf          # Tmux configuration
-├── git/
-│   ├── gitconfig          # Git configuration
-│   └── gitignore_global   # Global gitignore
-├── cursor/
-│   └── User/
-│       ├── settings.json   # Cursor settings
-│       ├── keybindings.json # Cursor keybindings
-│       └── snippets/       # Code snippets
-├── karabiner/
-│   ├── karabiner.json     # Karabiner-Elements configuration
-│   └── assets/            # Complex modifications
-├── nvim/                  # Neovim configuration
-├── wezterm/              # WezTerm terminal configuration
-├── ghostty/              # Ghostty terminal configuration
-├── tig/                  # Tig (git TUI) configuration
-├── zed/                  # Zed editor configuration
-│   ├── settings.json     # Editor settings
-│   ├── keymap.json       # Custom keybindings
-│   └── tasks.json        # Task definitions
-├── scripts/
-│   └── various utility scripts
-├── codex/                # Codex CLI 用テンプレ（~/.codex に配備）
+├── shell/               # Zsh/Tmux
+├── git/                 # Git 設定
+├── cursor/              # Cursor 設定
+├── karabiner/           # Karabiner-Elements
+├── nvim/                # Neovim
+├── wezterm/             # WezTerm
+├── ghostty/             # Ghostty
+├── tig/                 # tig
+├── zed/                 # Zed
+├── codex/               # Codex テンプレ (~/.codex)
 │   ├── README.md
 │   ├── profile.default.json
-│   └── config.toml       # Codex 本体設定（テンプレ）
+│   └── config.toml
 ├── scripts/
-│   ├── setup-codex.sh    # Codex CLI セットアップ（必要時）
-│   └── codex-run         # Codex 起動ラッパ（~/.local/bin に配備）
-├── sync-dotfiles.sh      # Home → Repo へ同期
-├── push-dotfiles.sh      # コミット & プッシュ補助
-├── install.sh            # Automated installation script
-└── README.md             # This file
+│   ├── setup-codex.sh   # Codex 本体の導入試行
+│   └── codex-run        # Codex 起動ラッパ (~/.local/bin)
+├── sync-dotfiles.sh     # ホーム→リポジトリ同期
+├── push-dotfiles.sh     # コミット/プッシュ補助
+└── install.sh           # 一括インストーラ
 ```
 
-## 🔧 Installation
+## 🔧 セットアップ
 
-### Quick Install
+### クイックインストール
 
 ```bash
-# Clone the repository
-git clone https://github.com/[your-username]/dotfiles.git ~/dotfiles
-
-# Run the installation script
+git clone https://github.com/soichiro-nitta/dotfiles.git ~/dotfiles
 cd ~/dotfiles
 ./install.sh
-
-# Reload your shell
-source ~/.zshrc
+source ~/.zshrc   # もしくはターミナル再起動
 ```
 
-### Manual Installation
+### 手動インストール（任意）
 
-If you prefer to install manually or selectively:
+1) 依存導入（未導入なら）
+```bash
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+brew install fzf z ripgrep bat tmux neovim gh jq tree htop tldr
+$(brew --prefix)/opt/fzf/install --all --no-update-rc
+```
 
-1. **Install dependencies**:
-   ```bash
-   # Install Homebrew (if not installed)
-   /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-   
-   # Install packages
-   brew install fzf z ripgrep bat tmux neovim gh jq tree htop tldr
-   
-   # Install fzf key bindings
-   $(brew --prefix)/opt/fzf/install
-   ```
+2) 設定ファイルの配置
+```bash
+cp shell/zshrc ~/.zshrc
+cp git/gitconfig ~/.gitconfig
+cp git/gitignore_global ~/.gitignore_global
+```
 
-2. **Copy configuration files**:
-   ```bash
-   cp shell/zshrc ~/.zshrc
-   cp git/gitconfig ~/.gitconfig
-   cp git/gitignore_global ~/.gitignore_global
-   ```
+3) Cursor を使う場合
+```bash
+mkdir -p ~/Library/Application\ Support/Cursor/User
+cp cursor/User/*.json ~/Library/Application\ Support/Cursor/User/
+```
 
-3. **Install Cursor settings** (if using Cursor):
-   ```bash
-   cp cursor/User/*.json ~/Library/Application\ Support/Cursor/User/
-   ```
-
-### (任意) Codex CLI のセットアップ
+### Codex を使う（任意）
 
 ```bash
-# テンプレ（~/.codex）と codex-run を配備
-./install.sh
-
-# Codex CLI 本体が未導入なら（可能なら）自動導入を試す
+# テンプレ（~/.codex）と codex-run は install.sh で自動配備済み
+# 本体未導入なら導入を試行
 ./scripts/setup-codex.sh
 
-# ラッパーで起動（日本語・安全既定）
+# 日本語・安全既定で起動
 codex-run
 ```
 
-## 📝 Key Bindings & Aliases
+## 📥 install.sh が配置するファイル
 
-### Git Operations
-| Command | Description |
-|---------|-------------|
-| `g` + space | Interactive Git command selection with fzf |
-| `gpsf` | Safe force push (--force-with-lease) |
-| `gco` | Interactive branch checkout |
-| `ga` | Interactive file staging |
-| `gsh` | Interactive stash management |
-| `gg` | Beautiful git log with graph |
-| `g st` | Git status (short) |
-| `g cm` | Git commit with message |
-| `g ps` | Git push |
-| `g pl` | Git pull |
+常時
+- `shell/zshrc` → `~/.zshrc`
+- `shell/tmux.conf` → `~/.tmux.conf`
+- `git/gitconfig` → `~/.gitconfig`
+- `git/gitignore_global` → `~/.gitignore_global`
+- `completion-for-pnpm.zsh` → `~/completion-for-pnpm.zsh`
+- `AGENTS.md` → `~/.codex/AGENTS.md`
+- `codex/config.toml` → `~/.codex/config.toml`
+- `codex/profile.default.json` → `~/.codex/profile.default.json`
+- `codex/README.md` → `~/.codex/README.md`
+- `scripts/codex-run` → `~/.local/bin/codex-run`（実行権限付与）
+- `~/.fzf.zsh`（未存在時に生成）
 
-### Directory Navigation
-| Command | Description |
-|---------|-------------|
-| `z` | Jump to frequently used directories |
-| `cd` (no args) | Interactive directory selection |
-| `..`, `...`, `....` | Navigate up directories |
-| `l`, `ll`, `la` | Various ls formats |
+条件付き
+- Cursor: `~/Library/Application Support/Cursor/User/` に settings/keybindings/snippets
+- Karabiner: `~/.config/karabiner/` に設定/assets（ディレクトリがある場合）
+- Neovim: `~/.config/nvim/` に一式（`nvim` がある場合）
+- WezTerm: `~/.config/wezterm/` に `.lua`（WezTerm あり or ディレクトリあり）
+- Ghostty: `~/.config/ghostty/` に `config`（Ghostty あり or ディレクトリあり）
+- tig: `~/.config/tig/` に `config`（`tig` がある場合）
+- Zed: `~/.config/zed/` に `settings.json`/`keymap.json`/`tasks.json`（Zed あり or ディレクトリあり）
 
-### Development
-| Command | Description |
-|---------|-------------|
-| `v` | Open files with fzf selection |
-| `p` | Run npm/pnpm scripts interactively |
-| `c` | Run Cursor Agent with notification |
-| `cs` | Run Claude with notification |
+作成されるディレクトリ
+- `~/.config`, `~/.local/bin`, `~/.npm-global`, `~/.codex`
 
-### Utilities
-| Command | Description |
-|---------|-------------|
-| Ctrl+R | Search command history with fzf |
-| Ctrl+Z | Quick directory jump with z |
+## ⌨️ 主なエイリアス/ショートカット
 
-## 🔄 Updating
+- Git: `g`+スペース（コマンド選択）、`gco`/`ga`/`gsh`、`gpsf`（安全な強制 push）
+- 移動: `z`（頻出ディレクトリ）、`cd`/`v`（fzf 選択）、`Ctrl+Z`（z 起動）
+- スクリプト: `p`（pnpm 対話実行）、`ps`（pnpm 専用）
+- Codex: `codex-run`
+- 同期/Push: `dotsync`、`dotpush`
 
-To update your dotfiles:
+## 🔄 更新・同期
 
 ```bash
 cd ~/dotfiles
 git pull
 ./install.sh
 
-# ホーム側で変更した設定を取り込んでから push
+# ホーム側の変更を取り込んでから push
 ~/Work/dotfiles/sync-dotfiles.sh
 ~/Work/dotfiles/push-dotfiles.sh "chore(dotfiles): 設定を同期"
 ```
 
-## 🛠 Customization
+## 🆘 トラブルシューティング
 
-### Adding new aliases
-Edit `shell/zshrc` and add your aliases in the appropriate section.
+- fzf が効かない: `$(brew --prefix)/opt/fzf/install --all --no-update-rc`
+- z が効かない: `brew reinstall z && source ~/.zshrc`
+- エイリアス反映: `source ~/.zshrc`
+- 権限エラー: `chmod +x ~/dotfiles/install.sh`
 
-### Modifying Git aliases
-Edit `git/gitconfig` to add or modify Git aliases.
+## ライセンス/貢献
 
-### Cursor settings
-Modify files in `cursor/User/` to customize Cursor IDE.
+個人利用の範囲で自由にどうぞ。改善案は Issue / PR 歓迎です。
 
-## 🆘 Troubleshooting
+注: 本設定は macOS 最適化です。他 OS では一部機能が動かない場合があります。
 
-### fzf not working
-```bash
-$(brew --prefix)/opt/fzf/install
-```
-
-### z command not working
-```bash
-brew reinstall z
-source ~/.zshrc
-```
-
-### Aliases not loading
-```bash
-source ~/.zshrc
-```
-
-### Permission issues
-```bash
-chmod +x ~/dotfiles/install.sh
-```
-
-## 📄 License
-
-Feel free to use and modify these dotfiles for your own use.
-
-## 🤝 Contributing
-
-If you have suggestions or improvements, feel free to open an issue or submit a pull request!
-
----
-
-**Note**: These dotfiles are optimized for macOS. Some features may not work on other operating systems.

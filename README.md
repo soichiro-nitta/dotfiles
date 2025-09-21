@@ -68,6 +68,23 @@ mkdir -p ~/Library/Application\ Support/Cursor/User
 cp cursor/User/*.json ~/Library/Application\ Support/Cursor/User/
 ```
 
+## 同期ポリシー（マシンが正）
+
+- このリポジトリは「マシン上の設定を集約したバックアップ」が正です。
+- `dotsync` で HOME から本リポジトリへ同期（コピー）します。
+- `dotpush` でコミット/プッシュします。
+- 一括実行は `dotupdate`（`dotsync` → `dotpush`）を使用します。
+
+エイリアス（`~/.zshrc`）
+
+```
+alias dotsync="~/Work/dotfiles/sync-dotfiles.sh"
+alias dotpush="~/Work/dotfiles/push-dotfiles.sh"
+alias dotupdate="~/Work/dotfiles/update-dotfiles.sh"
+```
+
+安全対策：`~/.codex` は機密を除外して同期します（`auth.json`/`history.jsonl`/`internal_storage.json`/`log/`/`sessions/`/`version.json`）。
+
 ### Codex を使う（任意）
 
 ```bash
@@ -138,4 +155,3 @@ git pull
 個人利用の範囲で自由にどうぞ。改善案は Issue / PR 歓迎です。
 
 注: 本設定は macOS 最適化です。他 OS では一部機能が動かない場合があります。
-

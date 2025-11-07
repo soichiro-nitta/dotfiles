@@ -16,6 +16,6 @@
 
 - `./scripts/setup-codex.sh` で Codex CLI をインストール（未導入時）
 - `codex-run` コマンド（`~/.local/bin`）で日本語・安全既定の起動ラッパを利用
+- GitHub へ設定を反映するときは `codex/RELEASE.md` の手順に従って同期
 
 > 注: Codex CLI の仕様変更に備え、`profile.default.json` はドキュメント的なテンプレートです。CLI 側のオプションがある場合は `codex-run` の引数に反映してください。
-

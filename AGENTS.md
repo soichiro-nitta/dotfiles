@@ -10,13 +10,12 @@
 
 ### コンポーネント
 - arrow function を使用（function 宣言は原則不使用）
-- props は展開しない（不要な `...props` の横流し禁止）
+- props は展開しない（不要な `...props` の横流し禁止）かつ、参照は `props.xxx` として行い分割代入は必要最小限に留める
 - 型定義は `type` を使用（`interface` は不使用。外部ライブラリとの統合時のみ例外）
 - `any` は使用禁止（必要なら明示的な型設計）
 - React Hooks は名前付きインポート（`React.useState` は不使用）
 - props の型はインラインで記述（再利用時のみ `type` 定義）
 - `forwardRef` は使用しない（外部ライブラリとの統合時のみ例外）
-- props は `props.xxx` として明示的に参照（分割代入は必要時のみ最小限）
 
 ### コード構造
 - return は最小限（単一 return 推奨）
@@ -54,16 +53,22 @@
 
 ## 3. ファイル/フォルダ構成（Next.js App Router）
 - `page.tsx` は RSC（"use client" 禁止）
-- クライアント側ロジックは `_Client/` へ分離
+- クライアント側ロジックは `_Client/` 配下に分離
 - 単回利用の子は `_` プレフィックス（例: `_DialogEdit.tsx`）
 - `app/layout.tsx` は `<main>` ランドマークで `children` をラップ（ページ側では `<main>` 不使用）
 - トップページ関連は `app/(home)` に集約
+- 最上位レイアウト関連は `app/(layout)` に集約
+- キャッシュタグは `app/tag.ts` などに集約し、`TAG` 定数で提供
 - `@` はプロジェクトルートのエイリアス
 
 ## 4. DOM 操作・Motion 統合
 - DOM 操作で try/catch を使わない（存在ガードと型絞り込み）
 - 一時的参照は `ref`、横断参照は `id`（`ID.XXX.E()`）
 - `@soichiro_nitta/motion` を使用
+- RSC では `createId(['BOX', ...])` を `app/id.ts` などで実行し、Client Component では `'use client'` な `app/motion.ts` から `createMotion(ID)` を呼ぶ
+- `motion.to('BOX', ...)` のように ID 名リテラルで target を指定（`ID.BOX.N` は DOM 属性用）
+- 非同期アニメーションは同梱の `useEffectAsync(async () => { await motion.to('BOX', ...) }, deps)` で記述し、`void` IIFE や手動での Promise 無視は避ける
+- Next.js 16 での完全なサンプルは `motion-rsc-test` リポジトリ（https://github.com/soichiro-nitta/motion-rsc-test）を参照
 - 変化は `transform`/`opacity` に限定（`scale`, `translateY`, `rotate`, `opacity`）
 - `motion.delay(sec)` は常に `await` を付けて使用（`setTimeout`/`setInterval` 不使用）
 - `motion.set`/`motion.to` へ `transform` 複合値を渡さない（個別キー指定）
@@ -99,10 +104,14 @@
 - CRUD: `get`, `getById`, `add`, `update`, `remove`
 - 関数名にドメイン名を含めない
 
+## 11. キャッシュ/タグ・Server Actions
+- `app/tag.ts` などでタグを一元管理し、`TAG` を定数化（例: `export const TAG = { XXX_XXX: (key: string) => \`XXX_XXX:${key}\` } as const`）
+- 書き込み処理は Server Actions に集約し、副作用の散在を避ける
+- Server Action 成功後は `revalidateTag(TAG.prepGroups(tenantId))` のように関連タグで一覧を最新化する
+
 ## 禁止事項
 - `page.tsx` に "use client" を付与しない
 - 不要な `...props` の横流し禁止
 - トップページ専用の要素を `app/` 直下や共通ディレクトリに置かない
 - 早期リターン（`if (!cond) return`）を使用しない
 - `setTimeout`/`setInterval` 不使用（待機は `motion.delay` に統一）
-

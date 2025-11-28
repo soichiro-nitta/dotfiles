@@ -1,3 +1,6 @@
+# Codex の resume を呼び出すエイリアス
+alias cr='codex resume'
+
 # gをエイリアスとして定義
 alias g='git'
 

@@ -68,6 +68,7 @@
 - `@soichiro_nitta/motion` を使用
 - RSC では `createId(['BOX', ...])` を `app/id.ts` などで実行し、Client Component では `'use client'` な `app/motion.ts` から `createMotion(ID)` を呼ぶ
 - `motion.to('BOX', ...)` のように ID 名リテラルで target を指定（`ID.BOX.N` は DOM 属性用）
+- motion の `id` はファイルをまたいで要素を触る必要がある場合にのみ使用し、それ以外は `ref` を渡す
 - 非同期アニメーションは同梱の `useEffectAsync(async () => { await motion.to('BOX', ...) }, deps)` で記述し、`void` IIFE や手動での Promise 無視は避ける
 - Next.js 16 での完全なサンプルは `motion-rsc-test` リポジトリ（https://github.com/soichiro-nitta/motion-rsc-test）を参照
 - 変化は `transform`/`opacity` に限定（`scale`, `translateY`, `rotate`, `opacity`）

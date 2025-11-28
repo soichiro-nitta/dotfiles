@@ -109,6 +109,10 @@
 - 書き込み処理は Server Actions に集約し、副作用の散在を避ける
 - Server Action 成功後は `revalidateTag(TAG.prepGroups(tenantId))` のように関連タグで一覧を最新化する
 
+## 12. ドットファイル運用
+- `.zshrc` などドットファイルを更新した場合は `/Users/soichiro/Work/dotfiles` リポジトリも必ず同内容で更新（コミットおよびプッシュ）する
+- 上記の反映・コミット・プッシュは指示待ちせず即時実施する
+
 ## 禁止事項
 - `page.tsx` に "use client" を付与しない
 - 不要な `...props` の横流し禁止

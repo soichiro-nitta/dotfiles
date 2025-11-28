@@ -16,6 +16,7 @@
 - React Hooks は名前付きインポート（`React.useState` は不使用）
 - props の型はインラインで記述（再利用時のみ `type` 定義）
 - `forwardRef` は使用しない（外部ライブラリとの統合時のみ例外）
+- `ref.current` を一時変数に取り出す場合は 1–2 文字の短い変数名（例: `n`, `el`）で保持し、null チェックを行う
 
 ### コード構造
 - return は最小限（単一 return 推奨）

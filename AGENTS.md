@@ -119,6 +119,7 @@
 ## 12. ドットファイル運用
 - `.zshrc` などドットファイルを更新した場合は `/Users/soichiro/Work/dotfiles` リポジトリも必ず同内容で更新（コミットおよびプッシュ）する
 - 上記の反映・コミット・プッシュは指示待ちせず即時実施する
+- ルール変更時は `dotfiles/AGENTS.md` を更新し `/Users/soichiro/.codex/AGENTS.md` にも即時反映してコミット・プッシュする（両者の内容を常に一致させる）
 
 ## 禁止事項
 - `page.tsx` に "use client" を付与しない

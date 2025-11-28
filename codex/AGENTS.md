@@ -82,6 +82,7 @@
 
 ## 6. Next.js 固有
 - `next/image` を使用しない（標準 `<img>`、`alt` 必須）
+- Next.js 16 以降で MCP が利用できる環境では、エラー調査・診断時に必ず Next.js MCP（例: `nextjs_index` → `nextjs_call`）を用いる
 
 ## 7. パッケージ管理
 - 常に pnpm を使用（`pnpm add`, `pnpm add -D`, `pnpm install`）

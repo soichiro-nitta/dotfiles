@@ -5,6 +5,7 @@
 ## Language Policy
 
 - 常に日本語で応答してください。
+- 回答はわかりやすく簡潔に、箇条書きと箇条書きの入れ子、改行を使用して整理すること。
 
 ## 1. コーディング規約（React/TypeScript）
 
@@ -54,7 +55,7 @@
 
 ## 3. ファイル/フォルダ構成（Next.js App Router）
 - `page.tsx` は RSC（"use client" 禁止）
- - クライアントコンポーネントは使用箇所と同じフォルダに同居（再利用性がないものはファイル名をアンダーバー始まりで命名）
+- クライアントコンポーネントは使用箇所と同じフォルダに同居（再利用性がないものはファイル名をアンダーバー始まりで命名）
 - 単回利用の子は `_` プレフィックス（例: `_DialogEdit.tsx`）
 - `app/layout.tsx` は `<main>` ランドマークで `children` をラップ（ページ側では `<main>` 不使用）
 - トップページ関連は `app/(home)` に集約
@@ -71,10 +72,12 @@
 - motion の `id` はファイルをまたいで要素を触る必要がある場合にのみ使用し、それ以外は `ref` を渡す
 - 非同期アニメーションは同梱の `useEffectAsync(async () => { await motion.to('BOX', ...) }, deps)` で記述し、`void` IIFE や手動での Promise 無視は避ける
 - `useEffect` で await が必要な場合は必ず同梱の `useEffectAsync` を使用（`useEffect` に直接 async を渡さない）
+- 即時 async IIFE は `(async () => { ... })()` ではなく `motion.run(async () => { ... })` を使用する
 - Next.js 16 での完全なサンプルは `motion-rsc-test` リポジトリ（https://github.com/soichiro-nitta/motion-rsc-test）を参照
 - 変化は `transform`/`opacity` に限定（`scale`, `translateY`, `rotate`, `opacity`）
 - `motion.delay(sec)` は常に `await` を付けて使用（`setTimeout`/`setInterval` 不使用）
 - `motion.set`/`motion.to` へ `transform` 複合値を渡さない（個別キー指定）
+- `motion.set` で `transitionDuration` を未指定の場合は自動的に `0s` になる
 - 単位付き文字列を使用（例: `'61px'`, `'120deg'`, `'1'`）
 
 ## 5. スタイル管理

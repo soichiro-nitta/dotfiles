@@ -74,6 +74,9 @@
 - `useEffect` で await が必要な場合は必ず同梱の `useEffectAsync` を使用（`useEffect` に直接 async を渡さない）
 - 即時 async IIFE は `(async () => { ... })()` ではなく `motion.run(async () => { ... })` を使用する
 - Next.js 16 での完全なサンプルは `motion-rsc-test` リポジトリ（https://github.com/soichiro-nitta/motion-rsc-test）を参照
+- ライブラリ更新は `cd /Users/soichiro/Work/motion && pnpm pack` で生成した tarball を利用し、各プロジェクトで `pnpm add ../motion/soichiro_nitta-motion-<version>.tgz --force` で再インストールする（`link:` 依存は使用しない）
+- dev 再起動時に `.next/dev/lock` が残る場合は `.next` を削除してから `pnpm dev --hostname 127.0.0.1 --port 3000` を起動
+- 典型エラー対処: `useEffectAsync is not a function` → 新しい tarball を再パック＆再インストール / `Module not found: Can't resolve '@soichiro_nitta/motion'` → tarball 再生成して `pnpm add` し直す
 - 変化は `transform`/`opacity` に限定（`scale`, `translateY`, `rotate`, `opacity`）
 - `motion.delay(sec)` は常に `await` を付けて使用（`setTimeout`/`setInterval` 不使用）
 - `motion.set`/`motion.to` へ `transform` 複合値を渡さない（個別キー指定）

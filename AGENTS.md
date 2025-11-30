@@ -97,16 +97,19 @@
 - 常に pnpm を使用（`pnpm add`, `pnpm add -D`, `pnpm install`）
 
 ## 8. ESLint/Prettier
-- ESLint: Flat Config（`eslint.config.mjs`）
-- `@next/next/no-img-element` はオフ
-- `import/order` でアルファベット昇順・グループ改行
-- Hooks: `rules-of-hooks` off / `exhaustive-deps` warn
-- TS: `no-explicit-any: warn`, `consistent-type-imports: error`, `no-unused-vars: warn`
-- 特殊制約：
-  - `**/app/**/page.{js,jsx,ts,tsx}` で "use client" 禁止
-  - Client → Server/Page の直 import を禁止
-  - TS ファイルから `page.tsx` への直 import を禁止
-- Prettier: `prettier-plugin-tailwindcss`、セミコロンなし、シングルクォート、トレイリングカンマあり
+- ESLint（Flat Config `eslint.config.mjs`）
+  - parser: `@typescript-eslint/parser`（`projectService: true`、`globals: browser/node`）
+  - 主要ルール: `@next/next/no-img-element` off / `react/jsx-pascal-case` off / `import/order` アルファベット昇順＋グループ改行
+  - Hooks: `rules-of-hooks` off / `exhaustive-deps` warn
+  - TS: `no-explicit-any` warn / `consistent-type-imports` error / `no-unused-vars` warn（`_` 始まりは無視）
+  - その他: `no-console` warn / `no-debugger` error / `no-underscore-dangle` off
+  - ガード: page.tsx で "use client" 禁止 / `.client.*` から Server・Page 直 import 禁止 / TS から `page.tsx` 直 import 禁止
+  - ignore: `.next/**`, `node_modules/**` / `eslint-config-prettier` で Prettier と競合無効化
+- Prettier（`prettier.config.mjs`）
+  - プラグイン: `prettier-plugin-tailwindcss`（`tailwindStylesheet` は各プロジェクトの `app/globals.css` に合わせる）
+  - フォーマット: セミコロンなし / シングルクォート & JSX シングルクォート / トレイリングカンマあり
+  - レイアウト: `printWidth: 120` / `tabWidth: 2` / `useTabs: false` / `bracketSameLine: false` / `bracketSpacing: false` / `arrowParens: avoid`
+  - その他: `endOfLine: lf` / `quoteProps: as-needed` / `htmlWhitespaceSensitivity: ignore` / `embeddedLanguageFormatting: auto`
 
 ## 9. コミットメッセージ
 - 日本語、Conventional Commits 推奨（例：`feat: ホームページのヒーローセクションを追加`）

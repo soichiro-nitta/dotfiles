@@ -33,6 +33,7 @@
 - 単回利用の一時変数は作らずインライン化
 - 再利用や可読性向上の根拠がない一時変数の導入を禁止
 - 例外: 値が変わる可能性があるもの（`ref.current`、非同期間の状態など）は安全のため一時変数で保持
+- DOM 参照を一時変数にする場合は 1–2 文字で統一（例: `b`, `l`, `r`, `s`, `lt`, `lb`, `m`）
 
 ### コード品質
 - 型定義はインライン化（再利用時のみ `type` 定義）
@@ -99,7 +100,8 @@
 ## 8. ESLint/Prettier
 - ESLint（Flat Config `eslint.config.mjs`）
   - parser: `@typescript-eslint/parser`（`projectService: true`、`globals: browser/node`）
-  - 主要ルール: `@next/next/no-img-element` off / `react/jsx-pascal-case` off / `import/order` アルファベット昇順＋グループ改行
+  - 主要ルール: `@next/next/no-img-element` off / `react/jsx-pascal-case` off / `perfectionist/sort-imports`（サイドエフェクト→style→型/builtin/external→internal→親/兄弟/index→unknown の昇順, 大文字小文字無視, 空行維持） / `perfectionist/sort-named-imports` / `perfectionist/sort-jsx-props` / `perfectionist/sort-objects` / `perfectionist/sort-object-types`
+  - React: `react/self-closing-comp` で空タグは必ず self-closing（component/html 両方）
   - Hooks: `rules-of-hooks` off / `exhaustive-deps` warn
   - TS: `no-explicit-any` warn / `consistent-type-imports` error / `no-unused-vars` warn（`_` 始まりは無視）
   - その他: `no-console` warn / `no-debugger` error / `no-underscore-dangle` off

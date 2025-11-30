@@ -134,3 +134,10 @@
 - トップページ専用の要素を `app/` 直下や共通ディレクトリに置かない
 - 早期リターン（`if (!cond) return`）を使用しない
 - `setTimeout`/`setInterval` 不使用（待機は `motion.delay` に統一）
+
+## 13. VSCode 設定
+- `.vscode/settings.json` の基本セットを各プロジェクトで共有する
+- `editor.formatOnSave: true`、`editor.defaultFormatter: esbenp.prettier-vscode`
+- `editor.codeActionsOnSave.source.fixAll.eslint: "explicit"`（保存時に ESLint 修正）
+- `eslint.useFlatConfig: true` ＋ `eslint.options.overrideConfigFile: eslint.config.mjs`
+- `prettier.configPath: prettier.config.mjs`

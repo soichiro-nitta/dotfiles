@@ -536,7 +536,9 @@ function ns() {
 
 # pnpmユーザー向け（fzf版）
 function ps() {
-  if [[ -f package.json ]]; then
+  if [[ $# -gt 0 ]]; then
+    command ps "$@"
+  elif [[ -f package.json ]]; then
     local script
     script=$(node -pe "
       try {

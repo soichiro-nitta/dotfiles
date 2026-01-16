@@ -10,6 +10,7 @@
 ## 1. コーディング規約（React/TypeScript）
 
 ### コンポーネント
+
 - arrow function を使用（function 宣言は原則不使用）
 - props は展開しない（不要な `...props` の横流し禁止）かつ、参照は `props.xxx` として行い分割代入は必要最小限に留める
 - 型定義は `type` を使用（`interface` は不使用。外部ライブラリとの統合時のみ例外）
@@ -20,6 +21,7 @@
 - `ref.current` を一時変数に取り出す場合は 1–2 文字の短い変数名（例: `n`, `el`）で保持し、null チェックを行う
 
 ### コード構造
+
 - return は最小限（単一 return 推奨）
 - 早期リターン禁止・ガードブロック推奨（`if (!cond) return` は使用しない）
 - 条件分岐は `&&` を優先（三項は原則不使用。必要時のみ）
@@ -30,12 +32,14 @@
 - ファイル内ローカルのマッピング/補助ロジックは `__` プレフィックスで関数化しファイル最下部に配置
 
 ### 一時変数
+
 - 単回利用の一時変数は作らずインライン化
 - 再利用や可読性向上の根拠がない一時変数の導入を禁止
 - 例外: 値が変わる可能性があるもの（`ref.current`、非同期間の状態など）は安全のため一時変数で保持
 - DOM 参照を一時変数にする場合は 1–2 文字で統一（例: `b`, `l`, `r`, `s`, `lt`, `lb`, `m`）
 
 ### コード品質
+
 - 型定義はインライン化（再利用時のみ `type` 定義）
 - 重複パターンはオブジェクトリテラルで統合
 - コンポーネントは単一の return 文に収束
@@ -44,10 +48,12 @@
 ## 2. 命名規則
 
 ### 基本原則（役割優先・ドメイン後置）
+
 - 役割を先頭に置く（例: state, set, ref, id, key, on/handle, get/add/update/remove）
 - ドメイン名はその後ろに続ける（例: `stateUser`, `refSvg`, `idUser`, `onUserClick`）
 
 ### 具体例
+
 - useState: `stateXXX`, `setXXX`
 - useRef: `refXXX`
 - 反復処理コールバック引数は 1–2 文字（`p`, `i`）
@@ -55,6 +61,7 @@
 - ページ/レイアウトの変数名: ページは `Page`、レイアウトは `Layout`（default export）
 
 ## 3. ファイル/フォルダ構成（Next.js App Router）
+
 - `page.tsx` は RSC（"use client" 禁止）
 - クライアントコンポーネントは使用箇所と同じフォルダに同居（再利用性がないものはファイル名をアンダーバー始まりで命名）
 - 単回利用の子は `_` プレフィックス（例: `_DialogEdit.tsx`）
@@ -66,6 +73,7 @@
 - `@` はプロジェクトルートのエイリアス
 
 ## 4. DOM 操作・Motion 統合
+
 - DOM 操作で try/catch を使わない（存在ガードと型絞り込み）
 - 一時的参照は `ref`、横断参照は `id`（`ID.XXX.E()`）
 - `@soichiro_nitta/motion` を使用
@@ -86,21 +94,25 @@
 - 単位付き文字列を使用（例: `'61px'`, `'120deg'`, `'1'`）
 
 ## 5. スタイル管理
+
 - 共通スタイルはファイル内ローカルの `__style` に集約
-- クラス合成は `class-variance-authority` の `cva`/`cx`
+- クラス合成は `class-variance-authority` の `cva`/`cx`（条件分岐は cx のオブジェクト形式で記述し、三項やテンプレート文字列での結合は禁止）
 - ページ内共通化は `__style` or `__Component` で対応
 
 ## 6. Next.js 固有
+
 - `next/image` を使用しない（標準 `<img>`、`alt` 必須）
 - Next.js 16 以降で MCP が利用できる環境では、エラー調査・診断時に必ず Next.js MCP（例: `nextjs_index` → `nextjs_call`）を用いる
 
 ## 7. パッケージ管理
+
 - 常に pnpm を使用（`pnpm add`, `pnpm add -D`, `pnpm install`）
 
 ## 8. ESLint/Prettier
+
 - ESLint（Flat Config `eslint.config.mjs`）
   - parser: `@typescript-eslint/parser`（`projectService: true`、`globals: browser/node`）
-  - 主要ルール: `@next/next/no-img-element` off / `react/jsx-pascal-case` off / `perfectionist/sort-imports`（サイドエフェクト→style→型/builtin/external→internal→親/兄弟/index→unknown の昇順, 大文字小文字無視, 空行維持） / `perfectionist/sort-named-imports` / `perfectionist/sort-jsx-props` / `perfectionist/sort-objects` / `perfectionist/sort-object-types`
+  - 主要ルール: `@next/next/no-img-element` off / `react/jsx-pascal-case` off / `perfectionist/sort-imports`（サイドエフェクト →style→ 型/builtin/external→internal→ 親/兄弟/index→unknown の昇順, 大文字小文字無視, 空行維持） / `perfectionist/sort-named-imports` / `perfectionist/sort-jsx-props` / `perfectionist/sort-objects` / `perfectionist/sort-object-types`
   - React: `react/self-closing-comp` で空タグは必ず self-closing（component/html 両方）
   - Hooks: `rules-of-hooks` off / `exhaustive-deps` warn
   - TS: `no-explicit-any` warn / `consistent-type-imports` error / `no-unused-vars` warn（`_` 始まりは無視）
@@ -114,23 +126,28 @@
   - その他: `endOfLine: lf` / `quoteProps: as-needed` / `htmlWhitespaceSensitivity: ignore` / `embeddedLanguageFormatting: auto`
 
 ## 9. コミットメッセージ
+
 - 日本語、Conventional Commits 推奨（例：`feat: ホームページのヒーローセクションを追加`）
 
 ## 10. Convex 命名
+
 - CRUD: `get`, `getById`, `add`, `update`, `remove`
 - 関数名にドメイン名を含めない
 
 ## 11. キャッシュ/タグ・Server Actions
+
 - `app/tag.ts` などでタグを一元管理し、`TAG` を定数化（例: `export const TAG = { XXX_XXX: (key: string) => \`XXX_XXX:${key}\` } as const`）
 - 書き込み処理は Server Actions に集約し、副作用の散在を避ける
 - Server Action 成功後は `revalidateTag(TAG.prepGroups(tenantId))` のように関連タグで一覧を最新化する
 
 ## 12. ドットファイル運用
+
 - `.zshrc` などドットファイルを更新した場合は `/Users/soichiro/Work/dotfiles` リポジトリも必ず同内容で更新（コミットおよびプッシュ）する
 - 上記の反映・コミット・プッシュは指示待ちせず即時実施する
 - ルール変更時はまず `/Users/soichiro/.codex/AGENTS.md` を更新し、それを `dotfiles/AGENTS.md` にコピーしてコミット・プッシュする（/.codex が主、dotfiles はバックアップ兼共有）
 
 ## 禁止事項
+
 - `page.tsx` に "use client" を付与しない
 - 不要な `...props` の横流し禁止
 - トップページ専用の要素を `app/` 直下や共通ディレクトリに置かない
@@ -138,6 +155,7 @@
 - `setTimeout`/`setInterval` 不使用（待機は `motion.delay` に統一）
 
 ## 13. VSCode 設定
+
 - `.vscode/settings.json` の基本セットを各プロジェクトで共有する
 - `editor.formatOnSave: true`、`editor.defaultFormatter: esbenp.prettier-vscode`
 - `editor.codeActionsOnSave.source.fixAll.eslint: "explicit"`（保存時に ESLint 修正）

@@ -1,3 +1,6 @@
+# Codex の resume を呼び出すエイリアス
+alias cr='codex resume'
+
 # gをエイリアスとして定義
 alias g='git'
 
@@ -315,16 +318,10 @@ alias t='tmux'
 alias ta='tmux attach-session -s'
 alias tn='tmux new-session -s'
 alias tk='tmux kill-session -t'
-# Claude with notification (using osascript)
+# Claude
 cs() {
   claude --dangerously-skip-permissions "$@"
-  local exit_code=$?
-  if [ $exit_code -eq 0 ]; then
-    osascript -e 'display notification "Claude Code完了" with title "WezTerm" sound name "Glass"'
-  else
-    osascript -e 'display notification "Claude Codeエラー終了" with title "WezTerm" sound name "Basso"'
-  fi
-  return $exit_code
+  return $?
 }
 # Alias c to use the same function as cs
 # alias c=cs
@@ -470,34 +467,9 @@ z() {
   fi
 }
 
-# カスタムプロンプト設定
-# Git情報を表示する関数
-autoload -Uz vcs_info
-precmd_vcs_info() { vcs_info }
-precmd_functions+=( precmd_vcs_info )
-setopt prompt_subst
-
-# Git情報の設定（モノトーン）
-zstyle ':vcs_info:git:*' formats '%F{white}⎇ %F{white}%b%f '
-zstyle ':vcs_info:git:*' actionformats '%F{white}⎇ %F{white}%b%f%F{8}|%a%f '
-zstyle ':vcs_info:*' enable git
-
-# Node.jsバージョンを取得する関数
-node_version_info() {
-  if command -v node > /dev/null 2>&1; then
-    local node_version=$(node --version 2>/dev/null)
-    if [[ -n $node_version ]]; then
-      echo " %F{8}⬢ ${node_version}%f"
-    fi
-  fi
-}
-
-# 美しいプロンプト設定（モノトーン）
-PROMPT='%F{white}╭─%f %F{white}%~%f ${vcs_info_msg_0_}$(node_version_info)
-%F{white}╰─%f %F{8}❯%f '
-
-# 右側プロンプト（時刻表示）
-RPROMPT='%F{8}%T%f'
+# シンプルなプロンプト設定
+PROMPT='%~ %F{8}❯%f '
+RPROMPT=''
 
 # package.jsonスクリプトを手軽に実行する関数
 function ns() {
@@ -658,20 +630,24 @@ alias ts="tig status"
 # cdコマンドをラップして引数なしの場合はfzfを使用
 cd() {
   if [[ $# -eq 0 ]]; then
-    # 引数なしの場合は現在のディレクトリ以下をfzfで選択
+    # 引数なし: fzf でディレクトリ選択。先頭に「..（親へ）」を追加
     local selected_dir
     selected_dir=$(
-      find . -type d -not -path '*/\.*' 2>/dev/null | \
+      { echo ".."; find . -type d -not -path '*/\.*' 2>/dev/null; } | \
       fzf --preview 'echo "📁 $(basename {})" && echo "━━━━━━━━━━━━━━━━━━━━" && ls -1 {} 2>/dev/null | head -30 || echo "アクセスできません"' \
           --preview-window right:50%:wrap \
-          --header 'Select directory to change to' \
+          --header 'Select directory (.. = parent)' \
           --bind 'ctrl-/:toggle-preview' \
           --height 70% \
           --ansi
     )
-    
+
     if [[ -n "$selected_dir" ]]; then
-      builtin cd "$selected_dir"
+      if [[ "$selected_dir" == ".." ]]; then
+        builtin cd ..
+      else
+        builtin cd "$selected_dir"
+      fi
     fi
   else
     # 引数がある場合は通常のcdコマンドを実行
@@ -737,23 +713,101 @@ setopt PROMPT_CR
 setopt PROMPT_SP
 
 
-# >>> Cursor Agent c alias >>>
-# Managed by assistant: run Cursor Agent with c (auto-approve enabled)
+# >>> Codex c alias >>>
+# Managed by assistant: run Codex with c alias
 unalias c 2>/dev/null
 unset -f c 2>/dev/null
-c() {
-  cursor-agent --force "$@"
-  local exit_code=$?
-  if [ $exit_code -eq 0 ]; then
-    osascript -e 'display notification "Cursor Agent完了" with title "WezTerm" sound name "Glass"'
-  else
-    osascript -e 'display notification "Cursor Agentエラー終了" with title "WezTerm" sound name "Basso"'
-  fi
-  return $exit_code
-}
-# <<< Cursor Agent c alias <<<
+alias c='codex --yolo -s workspace-write'
+# <<< Codex c alias <<<
 
 # Added by Codex CLI: ensure ~/.local/bin is in PATH
 export PATH="/Users/soichiro/.local/bin:/usr/local/bin:/System/Cryptexes/App/usr/bin:/usr/bin:/bin:/usr/sbin:/sbin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/local/bin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/bin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/appleinternal/bin:/Library/Apple/usr/bin:/Users/soichiro/.npm-global/bin:/opt/homebrew/bin:/opt/homebrew/sbin:/opt/homebrew/opt/fzf/bin"
 export PATH="$HOME/.local/bin:$PATH"
 alias gpsf="git push --force-with-lease"
+alias dotupdate="~/Work/dotfiles/update-dotfiles.sh"
+
+# >>> Dev kill alias >>>
+# Node/Next など開発環境をざっくり落とす（停止対象/ポート/結果を出力）
+kn() {
+  local stateFailed=0
+
+  # 対象の PID を列挙（macOS想定）
+  local statePidsRaw
+  statePidsRaw=$(pgrep -x node 2>/dev/null || true)
+
+  local -a statePids
+  statePids=(${(f)statePidsRaw})
+
+  echo ''
+  echo '[kn] 対象確認（node）'
+
+  if [[ ${#statePids} -eq 0 ]]; then
+    echo '[kn] 対象なし: node プロセスは見つかりませんでした'
+  else
+    echo "[kn] 停止対象: ${#statePids} 件"
+
+    local pid
+    for pid in $statePids; do
+      local cmd
+      cmd=$(ps -o command= -p "$pid" 2>/dev/null | sed 's/^[[:space:]]*//')
+
+      local ports
+      ports=$(lsof -nP -a -p "$pid" -iTCP -sTCP:LISTEN 2>/dev/null | awk 'NR>1 {print $9}' | sed -E 's/.*:([0-9]+)$/\1/' | sort -u | tr '\n' ',' | sed 's/,$//')
+      if [[ -z "$ports" ]]; then
+        ports='(listenなし)'
+      fi
+
+      local kind
+      kind='node'
+      if echo "$cmd" | grep -qE 'next( |/).*dev'; then
+        kind='Next.js dev'
+      elif echo "$cmd" | grep -qE 'vite( |/)'; then
+        kind='Vite dev'
+      elif echo "$cmd" | grep -qE 'astro( |/)'; then
+        kind='Astro dev'
+      fi
+
+      echo "- pid=${pid} kind=${kind} ports=${ports} cmd=${cmd}"
+    done
+
+    echo '[kn] 停止中...'
+
+    for pid in $statePids; do
+      kill -TERM "$pid" 2>/dev/null || stateFailed=1
+    done
+
+    # 少し待って残りがあれば KILL
+    sleep 0.3
+
+    local stateRemainingRaw
+    stateRemainingRaw=$(pgrep -x node 2>/dev/null || true)
+
+    local -a stateRemaining
+    stateRemaining=(${(f)stateRemainingRaw})
+
+    if [[ ${#stateRemaining} -gt 0 ]]; then
+      echo "[kn] TERM で残ったため KILL: ${stateRemaining[*]}"
+      for pid in $stateRemaining; do
+        kill -KILL "$pid" 2>/dev/null || stateFailed=1
+      done
+
+      sleep 0.2
+    fi
+
+    local stateAfterRaw
+    stateAfterRaw=$(pgrep -x node 2>/dev/null || true)
+
+    local -a stateAfter
+    stateAfter=(${(f)stateAfterRaw})
+
+    if [[ ${#stateAfter} -eq 0 ]]; then
+      echo '[kn] 完了: node を停止しました'
+    else
+      echo "[kn] 失敗: まだ node が残っています: ${stateAfter[*]}"
+      stateFailed=1
+    fi
+  fi
+
+  return $stateFailed
+}
+# <<< Dev kill alias <<<

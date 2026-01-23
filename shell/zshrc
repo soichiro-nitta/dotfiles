@@ -318,16 +318,10 @@ alias t='tmux'
 alias ta='tmux attach-session -s'
 alias tn='tmux new-session -s'
 alias tk='tmux kill-session -t'
-# Claude with notification (using osascript)
+# Claude
 cs() {
   claude --dangerously-skip-permissions "$@"
-  local exit_code=$?
-  if [ $exit_code -eq 0 ]; then
-    osascript -e 'display notification "Claude Code完了" with title "WezTerm" sound name "Glass"'
-  else
-    osascript -e 'display notification "Claude Codeエラー終了" with title "WezTerm" sound name "Basso"'
-  fi
-  return $exit_code
+  return $?
 }
 # Alias c to use the same function as cs
 # alias c=cs

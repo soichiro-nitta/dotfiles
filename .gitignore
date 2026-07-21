@@ -60,10 +60,5 @@ temp/
 .env.local
 secrets/
 
-# Codex (機密除外)
-codex/auth.json
-codex/history.jsonl
-codex/internal_storage.json
-codex/log/
-codex/sessions/
-codex/version.json
+# Codex環境はprivateなcodex-env-backup repositoryを正本にする
+codex/

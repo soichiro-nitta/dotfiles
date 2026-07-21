@@ -1,6 +1,6 @@
 # Soichiro の Dotfiles（macOS）
 
-macOS 用の開発環境設定一式です。シェル、Git、各種エディタ/ターミナル、Codex のテンプレまでまとめて導入できます。
+macOS用の開発環境設定一式です。シェル、Git、各種エディタ、ターミナル、Codexの起動補助をまとめて導入できます。
 
 ## 🚀 特徴
 
@@ -8,7 +8,7 @@ macOS 用の開発環境設定一式です。シェル、Git、各種エディ�
 - ディレクトリ/ファイル移動の高速化（`z`、`cd`/`v` の fzf 連携）
 - `p`/`ps` で npm/pnpm スクリプトを対話実行
 - Cursor/Zed/WezTerm/Ghostty/tig/Neovim の設定同梱
-- Codex CLI 用テンプレ（AGENTS.md、config.toml、起動ラッパ）
+- Codex CLIの導入補助と起動ラッパ
 
 ## 📦 構成
 
@@ -24,10 +24,6 @@ dotfiles/
 ├── ghostty/             # Ghostty
 ├── tig/                 # tig
 ├── zed/                 # Zed
-├── codex/               # Codex テンプレ (~/.codex)
-│   ├── README.md
-│   ├── profile.default.json
-│   └── config.toml
 ├── scripts/
 │   ├── setup-codex.sh   # Codex 本体の導入試行
 │   └── codex-run        # Codex 起動ラッパ (~/.local/bin)
@@ -101,14 +97,18 @@ alias dotpush="~/Work/dotfiles/push-dotfiles.sh"
 alias dotupdate="~/Work/dotfiles/update-dotfiles.sh"
 ```
 
-安全対策：`~/.codex` は機密を除外して同期します（`auth.json`/`history.jsonl`/`internal_storage.json`/`log/`/`sessions/`/`version.json`）。
+`~/.codex`はこのrepositoryで同期しません。個人ルール、個人スキル、復旧用設定はprivateな`soichiro-nitta/codex-env-backup`を正本にします。
 
 ### Codex を使う（任意）
 
 ```bash
-# テンプレ（~/.codex）と codex-run は install.sh で自動配備済み
+# codex-run は install.sh で自動配備済み
 # 本体未導入なら導入を試行
 ./scripts/setup-codex.sh
+
+# 個人ルール・スキル・安全な設定を復旧
+git clone https://github.com/soichiro-nitta/codex-env-backup.git ~/Work/codex-env-backup
+~/Work/codex-env-backup/scripts/restore-codex-env.sh --apply
 
 # 日本語・安全既定で起動
 codex-run
@@ -119,8 +119,8 @@ codex-run
 - 役割の統一: 「マシンが正」。dotfiles は収集物（バックアップ）として管理します。
 - 日常運用: 変更後は `dotupdate` ひとつで同期→コミット→プッシュまで完了。
 - 局所運用: `dotsync` だけでリポジトリへ取り込み、内容確認後に `dotpush`。
-- 同期対象（抜粋）: `~/.zshrc`、`~/.tmux.conf`、`~/.gitconfig`、`~/.gitignore_global`、Cursor/Zed/VSCode/WezTerm/Ghostty/Karabiner/tig のユーザー設定、`~/.codex`（機密除外）。
-- 除外（重要）: Codex の認証/履歴/ログ/セッションは `.gitignore` 済み。Cursor などのキャッシュ類も除外。
+- 同期対象（抜粋）: `~/.zshrc`、`~/.tmux.conf`、`~/.gitconfig`、`~/.gitignore_global`、Cursor/Zed/VSCode/WezTerm/Ghostty/Karabiner/tigのユーザー設定。
+- Codex環境は`codex-env-backup`、Cursorなどのキャッシュ類は各除外設定を正本にする。
 
 ### `c` エイリアス方針
 
@@ -143,6 +143,8 @@ cd ~/dotfiles
 
 ```
 ./scripts/setup-codex.sh
+git clone https://github.com/soichiro-nitta/codex-env-backup.git ~/Work/codex-env-backup
+~/Work/codex-env-backup/scripts/restore-codex-env.sh --apply
 ```
 
 3) エイリアス確認
@@ -173,10 +175,6 @@ git push --force
 - `git/gitconfig` → `~/.gitconfig`
 - `git/gitignore_global` → `~/.gitignore_global`
 - `completion-for-pnpm.zsh` → `~/completion-for-pnpm.zsh`
-- `AGENTS.md` → `~/.codex/AGENTS.md`
-- `codex/config.toml` → `~/.codex/config.toml`
-- `codex/profile.default.json` → `~/.codex/profile.default.json`
-- `codex/README.md` → `~/.codex/README.md`
 - `scripts/codex-run` → `~/.local/bin/codex-run`（実行権限付与）
 - `~/.fzf.zsh`（未存在時に生成）
 
@@ -191,7 +189,7 @@ git push --force
 - Zed: `~/.config/zed/` に `settings.json`/`keymap.json`/`tasks.json`（Zed あり or ディレクトリあり）
 
 作成されるディレクトリ
-- `~/.config`, `~/.local/bin`, `~/.npm-global`, `~/.codex`
+- `~/.config`, `~/.local/bin`, `~/.npm-global`
 
 ## ⌨️ 主なエイリアス/ショートカット
 

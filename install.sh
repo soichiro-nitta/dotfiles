@@ -267,16 +267,6 @@ if command -v zed &> /dev/null || [[ -d "$HOME/.config/zed" ]]; then
     fi
 fi
 
-# 12. Codex CLI templates (~/.codex)
-print_status "Installing Codex templates..."
-mkdir -p "$HOME/.codex"
-if [[ -f "AGENTS.md" ]]; then
-    cp AGENTS.md "$HOME/.codex/AGENTS.md"
-fi
-if [[ -d "codex" ]]; then
-    cp -R codex/* "$HOME/.codex/" 2>/dev/null || true
-fi
-
 # 13. Setup npm global directory
 print_status "Configuring npm..."
 npm config set prefix "$HOME/.npm-global"

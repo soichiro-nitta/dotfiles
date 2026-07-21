@@ -93,18 +93,4 @@ if [ -d "$HOME/.config/tig" ]; then
   echo "  sync: tig"
 fi
 
-# Codex: ~/.codex（機密除外）
-if [ -d "$HOME/.codex" ]; then
-  mkdir -p "$repo_dir/codex"
-  rsync -a \
-    --exclude 'auth.json' \
-    --exclude 'history.jsonl' \
-    --exclude 'internal_storage.json' \
-    --exclude 'log/' \
-    --exclude 'sessions/' \
-    --exclude 'version.json' \
-    "$HOME/.codex/" "$repo_dir/codex/"
-  echo "  sync: ~/.codex (safe)"
-fi
-
 echo "[dotfiles] 同期完了"
